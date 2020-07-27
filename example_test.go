@@ -8,14 +8,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestGetVNetClient(t *testing.T) {
-	vnetClient := GetVNetClient("1234abcd")
-	assert.NotNil(t, vnetClient.Authorizer, "Need a populated authorizer to continue")
+// func TestGetVNetClient(t *testing.T) {
+// 	vnetClient := GetVNetClient("1234abcd")
+// 	assert.NotNil(t, vnetClient.Authorizer, "Need a populated authorizer to continue")
 
-	result, err := vnetClient.List(context.TODO(), "fakeRG")
-	assert.Equal(t, result.Response().StatusCode, 404, "Expected not to find fake subscriptions and resource groups")
-	assert.Error(t, err, "Expected autorest not to find our fake subscription when listing networks")
-}
+// 	result, err := vnetClient.List(context.TODO(), "fakeRG")
+// 	assert.Equal(t, result.Response().StatusCode, 404, "Expected not to find fake subscriptions and resource groups")
+// 	assert.Error(t, err, "Expected autorest not to find our fake subscription when listing networks")
+// }
 
 func TestFakeVNetClient(t *testing.T) {
 	subscriptionID := "superfake"

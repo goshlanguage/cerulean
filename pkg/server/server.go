@@ -11,21 +11,18 @@ import (
 type Server struct {
 	Addr          string
 	Handlers      map[string]http.Handler
-	Subscriptions []*subscriptions.Subscription
+	Subscriptions *[]subscriptions.Subscription
 }
 
 // GetServer takes in a stringified address, eg: "127.0.0.1:8080" or ":8080", and returns a composed server
 func GetServer(addr string) Server {
-	handlers := make(map[string]http.Handler)
-	// TODO: Automatic iteration over handlers
-	subs := []*subscriptions.Subscription{}
-	handlers["/subscriptions"] = http.HandlerFunc(subscriptions.GetSubscriptionsHandler(subs))
-
 	server := Server{
 		Addr:          addr,
-		Handlers:      handlers,
-		Subscriptions: subs,
+		Handlers:      make(map[string]http.Handler),
+		Subscriptions: &[]subscriptions.Subscription{},
 	}
+	// TODO: Automatic iteration over handlers
+	server.Handlers["/subscriptions"] = subscriptions.GetSubscriptionsHandler(server.Subscriptions)
 
 	return server
 }

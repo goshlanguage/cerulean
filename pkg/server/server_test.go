@@ -38,5 +38,5 @@ func TestServer(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	assert.Equal(t, "", string(greeting))
+	assert.Equal(t, "[{\"id\":\"/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"subscriptionId\":\"c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"displayName\":\"mysub\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"\",\"quotaId\":\"\",\"spendingLimit\":\"\"}}]", string(greeting))
 }

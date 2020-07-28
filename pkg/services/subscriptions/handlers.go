@@ -35,7 +35,11 @@ GET:
 // GetSubscriptionsHandler is the GET method handler for /subscriptions
 func GetSubscriptionsHandler(subs *[]Subscription) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		b, err := json.Marshal(subs)
+		response := SubscriptionResponse{
+			Value: *subs,
+		}
+
+		b, err := json.Marshal(response)
 		if err != nil {
 			panic(err)
 		}

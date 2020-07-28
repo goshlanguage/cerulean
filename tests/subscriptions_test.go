@@ -54,7 +54,7 @@ func TestApiCallToCerulean(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	assert.Equal(t, "[{\"id\":\"/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"subscriptionId\":\"c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"displayName\":\"mysub\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"\",\"quotaId\":\"\",\"spendingLimit\":\"\"}}]", string(subscriptionResponse))
+	assert.Equal(t, "{\"value\":[{\"id\":\"/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"subscriptionId\":\"c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"displayName\":\"mysub\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"\",\"quotaId\":\"\",\"spendingLimit\":\"\"}}]}", string(subscriptionResponse))
 
 	client := azureSubscriptions.NewClientWithBaseURI(ts.URL)
 	client.Authorizer = autorest.NullAuthorizer{}
@@ -63,8 +63,6 @@ func TestApiCallToCerulean(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-
+	// TODO lets render out this object and find out how and what to assert on
 	fmt.Println(resultPage)
-
-	assert.True(t, false)
 }

@@ -1,6 +1,8 @@
-package server
+package tests
 
+// TODO: Don't use /latest
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -8,13 +10,26 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	azureSubscriptions "github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2015-11-01/subscriptions"
+	"github.com/Azure/go-autorest/autorest"
+	"github.com/goshlanguage/cerulean/pkg/server"
 	"github.com/goshlanguage/cerulean/pkg/services/subscriptions"
+
 	"github.com/stretchr/testify/assert"
 )
 
-func TestServer(t *testing.T) {
+func TestApiCallToCerulean(t *testing.T) {
+	// Setup server
+	// Add subscription to inventory
+	// Setup SDK
+	// ------
+	// Setup nullauthorizer
+	// Setup subscription client
+	// Request subs
+	// Validate that our sub exists
+
 	// TODO: Make helper that generates a sub
-	server := GetServer(":8080")
+	server := server.GetServer(":8080")
 	*server.Subscriptions = append(*server.Subscriptions, subscriptions.Subscription{
 		ID:             "/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a",
 		SubscriptionID: "c27e7a81-b684-4fce-91d8-fed9e9bb534a",
@@ -40,4 +55,16 @@ func TestServer(t *testing.T) {
 	}
 
 	assert.Equal(t, "[{\"id\":\"/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"subscriptionId\":\"c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"displayName\":\"mysub\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"\",\"quotaId\":\"\",\"spendingLimit\":\"\"}}]", string(greeting))
+
+	client := azureSubscriptions.NewClientWithBaseURI(ts.URL)
+	client.Authorizer = autorest.NullAuthorizer{}
+
+	resultPage, err := client.List(context.TODO())
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(resultPage)
+
+	assert.True(t, false)
 }

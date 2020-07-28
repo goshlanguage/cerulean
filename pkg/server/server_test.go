@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -13,10 +14,12 @@ import (
 func TestServer(t *testing.T) {
 	server := GetServer(":8080")
 
-	ts := httptest.NewServer(server.Handlers["/hello"])
+	ts := httptest.NewServer(server.Handlers["/subscriptions"])
 	defer ts.Close()
 
-	res, err := http.Get(ts.URL)
+	addr := fmt.Sprintf("%s/subscriptions/", ts.URL)
+	t.Errorf("Addr: %s", addr)
+	res, err := http.Get(addr)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,5 +30,5 @@ func TestServer(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	assert.Equal(t, string(greeting), "Hello, world!\n")
+	assert.Equal(t, "Hello, world!\n", string(greeting))
 }

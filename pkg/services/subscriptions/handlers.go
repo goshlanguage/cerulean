@@ -3,9 +3,6 @@ package subscriptions
 import (
 	"encoding/json"
 	"net/http"
-
-	"github.com/goshlanguage/cerulean/pkg/inventory"
-	"github.com/goshlanguage/cerulean/pkg/serivices/subscriptions"
 )
 
 /*
@@ -36,13 +33,16 @@ GET:
 */
 
 // GetSubscriptionsHandler is the GET method handler for /subscriptions
-func GetSubscriptionsHandler(pattern string, inventory *inventory.Inventory) func(http.ResponseWriter, *http.Request) {
-	return func(http.ResponseWriter, *http.Request) {
-		response := subscriptions.SubscriptionResponse{}
-		payload := json.Marshal(inventory.Subscriptions, &response)
+func GetSubscriptionsHandler(subs []*Subscription) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		b, err := json.Marshal(subs)
+		if err != nil {
+			panic(err)
+		}
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(payload)
-	})
+		w.Header().Set("Charset", "UTF-8")
+		json.NewEncoder(w).Encode(b)
+	}
 }
 
 // PostSubscriptionsHandler is the POST method handler for /subscriptions
@@ -51,7 +51,7 @@ func GetSubscriptionsHandler(pattern string, inventory *inventory.Inventory) fun
 // Response: {
 // 	"subscriptionLink": "/subscriptions/d0d6ee57-6530-4fca-93a6-b755a070be35"
 // }
-func PostSubscriptionsHandler(inventory *inventory.Inventory) func(http.ResponseWriter, *http.Request) {
+func PostSubscriptionsHandler(pattern string, subs []*Subscription) func(http.ResponseWriter, *http.Request) {
 	return func(http.ResponseWriter, *http.Request) {
 	}
 }

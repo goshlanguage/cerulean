@@ -10,7 +10,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	azureSubscriptions "github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2015-11-01/subscriptions"
+	azureSubscriptions "github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2019-11-01/subscriptions"
 	"github.com/Azure/go-autorest/autorest"
 	"github.com/goshlanguage/cerulean/pkg/server"
 	"github.com/goshlanguage/cerulean/pkg/services/subscriptions"
@@ -19,8 +19,6 @@ import (
 )
 
 func TestApiCallToCerulean(t *testing.T) {
-	// Setup server
-	// Add subscription to inventory
 	// Setup SDK
 	// ------
 	// Setup nullauthorizer
@@ -29,7 +27,9 @@ func TestApiCallToCerulean(t *testing.T) {
 	// Validate that our sub exists
 
 	// TODO: Make helper that generates a sub
+	// Setup server
 	server := server.GetServer(":8080")
+	// Add subscription to inventory
 	*server.Subscriptions = append(*server.Subscriptions, subscriptions.Subscription{
 		ID:             "/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a",
 		SubscriptionID: "c27e7a81-b684-4fce-91d8-fed9e9bb534a",
@@ -48,13 +48,13 @@ func TestApiCallToCerulean(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	greeting, err := ioutil.ReadAll(res.Body)
+	subscriptionResponse, err := ioutil.ReadAll(res.Body)
 	res.Body.Close()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	assert.Equal(t, "[{\"id\":\"/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"subscriptionId\":\"c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"displayName\":\"mysub\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"\",\"quotaId\":\"\",\"spendingLimit\":\"\"}}]", string(greeting))
+	assert.Equal(t, "[{\"id\":\"/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"subscriptionId\":\"c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"displayName\":\"mysub\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"\",\"quotaId\":\"\",\"spendingLimit\":\"\"}}]", string(subscriptionResponse))
 
 	client := azureSubscriptions.NewClientWithBaseURI(ts.URL)
 	client.Authorizer = autorest.NullAuthorizer{}

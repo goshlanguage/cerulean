@@ -2,7 +2,7 @@ package cerulean
 
 import (
 	"fmt"
-	"log"
+	"net"
 	"net/http"
 
 	"github.com/goshlanguage/cerulean/pkg/services/subscriptions"
@@ -13,6 +13,7 @@ type Cerulean struct {
 	// Addr is the address that Cerulean should listen at, eg: 127.0.0.1:51234
 	Addr          string
 	Handlers      map[string]http.Handler
+	Mux           *http.ServeMux
 	Subscriptions *[]subscriptions.Subscription
 }
 
@@ -23,7 +24,7 @@ type Cerulean struct {
 // New generates a local address to be passed in when initializing a `BaseClient`
 //   in order to point it at the mock server.
 func New(subscriptionID string) Cerulean {
-	addr := "127.0.0.1:8080"
+	addr := ":0"
 	// initSub is our initial SubscriptionID. This is important because there isn't an API route to create a SubscriptionID
 	// (or if there is please open an issue and let us know!)
 	initSub := subscriptions.NewSubscription(subscriptionID)
@@ -33,26 +34,36 @@ func New(subscriptionID string) Cerulean {
 	handlers := make(map[string]http.Handler)
 	handlers["/subscriptions"] = subscriptions.GetSubscriptionsHandler(subs)
 
+	mux := http.NewServeMux()
+	for route, handler := range handlers {
+		mux.Handle(route, handler)
+	}
+
 	server := Cerulean{
 		Addr:          addr,
 		Handlers:      handlers,
+		Mux:           mux,
 		Subscriptions: subs,
 	}
-
-	for route, handler := range handlers {
-		http.Handle(route, handler)
-	}
-	go server.ListenAndServe()
+	server.ListenAndServe()
 
 	return server
 }
 
 // ListenAndServe starts our server.
-func (server *Cerulean) ListenAndServe() {
-	log.Fatal(http.ListenAndServe(server.Addr, nil))
+func (server *Cerulean) ListenAndServe() error {
+	listener, err := net.Listen("tcp", ":0")
+	if err != nil {
+		return err
+	}
+
+	server.Addr = fmt.Sprintf(":%v", listener.Addr().(*net.TCPAddr).Port)
+
+	go http.Serve(listener, server.Mux)
+	return nil
 }
 
 // GetBaseClientURI returns the address string in the form consumable by say an azure-sdk-for-go BaseClient
 func (server *Cerulean) GetBaseClientURI() string {
-	return fmt.Sprintf("http://%s", server.Addr)
+	return fmt.Sprintf("http://127.0.0.1%s", server.Addr)
 }

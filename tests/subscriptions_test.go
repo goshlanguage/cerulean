@@ -8,7 +8,7 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2019-11-01/subscriptions"
 	"github.com/Azure/go-autorest/autorest"
-	"github.com/goshlanguage/cerulean/pkg/cerulean"
+	"github.com/goshlanguage/cerulean"
 	"github.com/stretchr/testify/assert"
 )
 

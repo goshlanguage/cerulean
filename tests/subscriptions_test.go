@@ -10,15 +10,14 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	azureSubscriptions "github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2019-11-01/subscriptions"
+	"github.com/Azure/azure-sdk-for-go/services/resources/mgmt/2019-11-01/subscriptions"
 	"github.com/Azure/go-autorest/autorest"
-	"github.com/goshlanguage/cerulean/pkg/server"
-	"github.com/goshlanguage/cerulean/pkg/services/subscriptions"
+	"github.com/goshlanguage/cerulean/pkg/cerulean"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func TestApiCallToCerulean(t *testing.T) {
+func TestGetSubscriptionsRoute(t *testing.T) {
 	// Setup SDK
 	// ------
 	// Setup nullauthorizer
@@ -26,17 +25,8 @@ func TestApiCallToCerulean(t *testing.T) {
 	// Request subs
 	// Validate that our sub exists
 
-	// TODO: Make helper that generates a sub
 	// Setup server
-	server := server.GetServer(":8080")
-	// Add subscription to inventory
-	*server.Subscriptions = append(*server.Subscriptions, subscriptions.Subscription{
-		ID:             "/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a",
-		SubscriptionID: "c27e7a81-b684-4fce-91d8-fed9e9bb534a",
-		DisplayName:    "mysub",
-		State:          "Enabled",
-	})
-
+	server := cerulean.New(":8080", "c27e7a81-b684-4fce-91d8-fed9e9bb534a")
 	assert.Equal(t, (*server.Subscriptions)[0].ID, "/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a", "Received an invalid subscription id")
 
 	ts := httptest.NewServer(server.Handlers["/subscriptions"])
@@ -54,9 +44,9 @@ func TestApiCallToCerulean(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	assert.Equal(t, "{\"value\":[{\"id\":\"/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"subscriptionId\":\"c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"displayName\":\"mysub\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"\",\"quotaId\":\"\",\"spendingLimit\":\"\"}}]}", string(subscriptionResponse))
+	assert.Equal(t, "{\"value\":[{\"id\":\"/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"subscriptionId\":\"c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"displayName\":\"Pay-As-You-Go\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"Public_2014-09-01\",\"quotaId\":\"PayAsYouGo_2014-09-01\",\"spendingLimit\":\"Off\"}}]}", string(subscriptionResponse))
 
-	client := azureSubscriptions.NewClientWithBaseURI(ts.URL)
+	client := subscriptions.NewClientWithBaseURI(ts.URL)
 	client.Authorizer = autorest.NullAuthorizer{}
 
 	resultPage, err := client.List(context.TODO())

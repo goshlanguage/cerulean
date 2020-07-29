@@ -2,10 +2,7 @@ package cerulean
 
 import (
 	"fmt"
-	"net"
-	"net/http"
 
-	"github.com/goshlanguage/cerulean/services/resourceGroups"
 	"github.com/goshlanguage/cerulean/services/subscriptions"
 	"github.com/labstack/echo"
 )
@@ -16,7 +13,11 @@ type Cerulean struct {
 	Addr string
 	// Handlers      map[string]http.Handler
 	// Mux           *http.ServeMux
-	Router        *echo.Echo
+	Router    *echo.Echo
+	Inventory Inventory
+}
+
+type Inventory struct {
 	Subscriptions *[]subscriptions.Subscription
 }
 
@@ -30,44 +31,51 @@ func New(subscriptionID string) Cerulean {
 	addr := ":0"
 	// initSub is our initial SubscriptionID. This is important because there isn't an API route to create a SubscriptionID
 	// (or if there is please open an issue and let us know!)
-	initSub := subscriptions.NewSubscription(subscriptionID)
-	subs := &[]subscriptions.Subscription{initSub}
+	// initSub := subscriptions.NewSubscription(subscriptionID)
+	// subs := &[]subscriptions.Subscription{initSub}
 
 	// TODO: Automatic iteration over handlers
 	// handlers := make(map[string]http.Handler)
 	// handlers["/subscriptions"] = subscriptions.GetSubscriptionsHandler(subs)
 	// handlers["/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}"] = resourceGroups.PutResourceGroupsHandler(subs)
 
-	mux := http.NewServeMux()
-	for route, handler := range handlers {
-		mux.Handle(route, handler)
-	}
+	// mux := http.NewServeMux()
+	// for route, handler := range handlers {
+	// mux.Handle(route, handler)
+	// }
 
 	server := Cerulean{
 		Addr: addr,
 		// Handlers:      handlers,
 		// Mux:           mux,
-		Router:        echo.New(),
-		Subscriptions: subs,
+		Router: echo.New(),
+		Inventory: Inventory{
+			Subscriptions: &[]subscriptions.Subscription{
+				subscriptions.NewSubscription(subscriptionID),
+			},
+		},
 	}
 
 	// server.ListenAndServe()
 	// return server
 
 	// Routes
-	server.Router.GET("/subscriptions", subscriptions.GetSubscriptionsHandler(subs))
-	server.Router.GET("/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}", resourceGroups.PutResourceGroupsHandler(subs))
+	// TODO: Pass subscription inventory to the subscriptions handler
+	server.Router.GET("/subscriptions", subscriptions.GetSubscriptionsHandler(server.Inventory.Subscriptions))
+	// server.Router.PUT("/subscriptions/:subscriptionID/resourceGroups/:resourceGroupName", resourceGroups.PutResourceGroupsHandler)
 
 	// Start server
-	listener, err := net.Listen("tcp", ":0")
-	if err != nil {
-		return err
-	}
+	// listener, err := net.Listen("tcp", ":0")
+	// if err != nil {
+	// return err
+	// }
 
-	server.Addr = fmt.Sprintf(":%v", listener.Addr().(*net.TCPAddr).Port)
+	// server.Addr = fmt.Sprintf(":%v", listener.Addr().(*net.TCPAddr).Port)
 
 	// go http.Serve(listener, server.Mux)
-	go e.Logger.Fatal(e.Start(":1323"))
+	go server.Router.Logger.Fatal(server.Router.Start(addr))
+
+	server.Addr = server.Router.TLSServer.Addr
 
 	return server
 }

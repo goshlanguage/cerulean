@@ -5,19 +5,20 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/http/httptest"
 	"testing"
 
+	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestServerInitilization(t *testing.T) {
 	cerulean := New("c27e7a81-b684-4fce-91d8-fed9e9bb534a")
-	assert.Equal(t, (*cerulean.Subscriptions)[0].ID, "/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a", "Received an invalid subscription id")
+	assert.Equal(t, (*cerulean.Inventory.Subscriptions)[0].ID, "/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a", "Received an invalid subscription id")
 
-	ts := httptest.NewServer(cerulean.Handlers["/subscriptions"])
-	defer ts.Close()
+	// ts := httptest.NewServer(cerulean.Handlers["/subscriptions"])
+	// defer ts.Close()
 
+	e := echo.New()
 	addr := fmt.Sprintf("%s/subscriptions", ts.URL)
 	res, err := http.Get(addr)
 	if err != nil {

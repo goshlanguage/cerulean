@@ -3,6 +3,8 @@ package subscriptions
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/labstack/echo"
 )
 
 /*
@@ -33,21 +35,23 @@ GET:
 */
 
 // GetSubscriptionsHandler is the GET method handler for /subscriptions
-func GetSubscriptionsHandler(subs *[]Subscription) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func GetSubscriptionsHandler(subs *[]Subscription) func(c echo.Context) error {
+	return func(c echo.Context) error {
 		response := SubscriptionResponse{
 			Value: *subs,
 		}
 
-		b, err := json.Marshal(response)
+		_, err := json.Marshal(response)
 		if err != nil {
 			panic(err)
 		}
-		w.Header().Set("Content-Type", "application/json")
-		w.Header().Set("Charset", "UTF-8")
-		// json.NewEncoder(w).Encode(b)
-		w.Write(b)
-	})
+
+		// w.Header().Set("Content-Type", "application/json")
+		// w.Header().Set("Charset", "UTF-8")
+		// w.Write(b)
+
+		return nil
+	}
 }
 
 // PostSubscriptionsHandler is the POST method handler for /subscriptions

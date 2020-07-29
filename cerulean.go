@@ -5,7 +5,9 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/goshlanguage/cerulean/services/resourceGroups"
 	"github.com/goshlanguage/cerulean/services/subscriptions"
+	"github.com/labstack/echo"
 )
 
 // Cerulean holds the handlers and port to instantiate the mock server
@@ -33,6 +35,7 @@ func New(subscriptionID string) Cerulean {
 	// TODO: Automatic iteration over handlers
 	handlers := make(map[string]http.Handler)
 	handlers["/subscriptions"] = subscriptions.GetSubscriptionsHandler(subs)
+	handlers["/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}"] = resourceGroups.PutResourceGroupsHandler(subs)
 
 	mux := http.NewServeMux()
 	for route, handler := range handlers {
@@ -45,13 +48,17 @@ func New(subscriptionID string) Cerulean {
 		Mux:           mux,
 		Subscriptions: subs,
 	}
-	server.ListenAndServe()
 
-	return server
-}
+	// server.ListenAndServe()
+	// return server
 
-// ListenAndServe starts our server.
-func (server *Cerulean) ListenAndServe() error {
+	// Echo instance
+	e := echo.New()
+
+	// Routes
+	e.GET("/subscriptions", subscriptions.GetSubscriptionsHandler(subs))
+
+	// Start server
 	listener, err := net.Listen("tcp", ":0")
 	if err != nil {
 		return err
@@ -59,8 +66,10 @@ func (server *Cerulean) ListenAndServe() error {
 
 	server.Addr = fmt.Sprintf(":%v", listener.Addr().(*net.TCPAddr).Port)
 
-	go http.Serve(listener, server.Mux)
-	return nil
+	// go http.Serve(listener, server.Mux)
+	go e.Logger.Fatal(e.Start(":1323"))
+
+	return server
 }
 
 // GetBaseClientURI returns the address string in the form consumable by say an azure-sdk-for-go BaseClient

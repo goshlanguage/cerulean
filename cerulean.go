@@ -13,9 +13,10 @@ import (
 // Cerulean holds the handlers and port to instantiate the mock server
 type Cerulean struct {
 	// Addr is the address that Cerulean should listen at, eg: 127.0.0.1:51234
-	Addr          string
-	Handlers      map[string]http.Handler
-	Mux           *http.ServeMux
+	Addr string
+	// Handlers      map[string]http.Handler
+	// Mux           *http.ServeMux
+	Router        *echo.Echo
 	Subscriptions *[]subscriptions.Subscription
 }
 
@@ -33,9 +34,9 @@ func New(subscriptionID string) Cerulean {
 	subs := &[]subscriptions.Subscription{initSub}
 
 	// TODO: Automatic iteration over handlers
-	handlers := make(map[string]http.Handler)
-	handlers["/subscriptions"] = subscriptions.GetSubscriptionsHandler(subs)
-	handlers["/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}"] = resourceGroups.PutResourceGroupsHandler(subs)
+	// handlers := make(map[string]http.Handler)
+	// handlers["/subscriptions"] = subscriptions.GetSubscriptionsHandler(subs)
+	// handlers["/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}"] = resourceGroups.PutResourceGroupsHandler(subs)
 
 	mux := http.NewServeMux()
 	for route, handler := range handlers {
@@ -43,20 +44,19 @@ func New(subscriptionID string) Cerulean {
 	}
 
 	server := Cerulean{
-		Addr:          addr,
-		Handlers:      handlers,
-		Mux:           mux,
+		Addr: addr,
+		// Handlers:      handlers,
+		// Mux:           mux,
+		Router:        echo.New(),
 		Subscriptions: subs,
 	}
 
 	// server.ListenAndServe()
 	// return server
 
-	// Echo instance
-	e := echo.New()
-
 	// Routes
-	e.GET("/subscriptions", subscriptions.GetSubscriptionsHandler(subs))
+	server.Router.GET("/subscriptions", subscriptions.GetSubscriptionsHandler(subs))
+	server.Router.GET("/subscriptions/{subscriptionID}/resourceGroups/{resourceGroupName}", resourceGroups.PutResourceGroupsHandler(subs))
 
 	// Start server
 	listener, err := net.Listen("tcp", ":0")

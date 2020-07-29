@@ -1,9 +1,10 @@
-The API response for /subscriptions look as follows (p.s. the uuids are fake, so don't try to hack the planet with these).
-If you'd like to make your own API requests, you can follow this guide to get you started:
+# `/subscriptions`
 
-https://medium.com/@mauridb/calling-azure-rest-api-via-curl-eb10a06127
+The API response for `/subscriptions` looks as follows (p.s. the UUIDs are fake, so don't try to hack the planet with these).
 
-`GET`:
+If you'd like to make your own API requests, you can follow [this guide to get you started](https://medium.com/@mauridb/calling-azure-rest-api-via-curl-eb10a06127).
+
+## `GET`:
 
 ```sh
 ➜ curl -s -X GET -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" "https://management.azure.com/subscriptions?api-version=2020-01-01" | jq .
@@ -30,4 +31,3 @@ https://medium.com/@mauridb/calling-azure-rest-api-via-curl-eb10a06127
   }
 }
 ```
-

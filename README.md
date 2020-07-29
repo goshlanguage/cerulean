@@ -33,7 +33,7 @@ func TestSubscription(t *testing.T) {
 }
 ```
 
-This project is artisanally crafted, laptop to market software. Please open an issue if you find a bug or have a request. PRs are welcomeß.
+This project is artisanally crafted, laptop to market software. Please open an issue if you find a bug or have a request. PRs are welcome.
 
 
 # Design

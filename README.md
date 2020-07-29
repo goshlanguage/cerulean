@@ -16,7 +16,7 @@ import (
     "fmt"
     "testing"
 
-    "github.com/azure/azure-sdk-for-go"
+    "github.com/azure/azure-sdk-for-go/services/resources/mgmt/2019-11-01/subscriptions"
     "github.com/goshlanguage/cerulean"
 )
 

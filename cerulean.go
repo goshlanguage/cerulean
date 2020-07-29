@@ -5,7 +5,7 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/goshlanguage/cerulean/pkg/services/subscriptions"
+	"github.com/goshlanguage/cerulean/services/subscriptions"
 )
 
 // Cerulean holds the handlers and port to instantiate the mock server

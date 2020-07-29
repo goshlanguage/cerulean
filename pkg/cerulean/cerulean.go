@@ -52,7 +52,7 @@ func (server *Cerulean) ListenAndServe() {
 	log.Fatal(http.ListenAndServe(server.Addr, nil))
 }
 
-// GetBaseClientURI
+// GetBaseClientURI returns the address string in the form consumable by say an azure-sdk-for-go BaseClient
 func (server *Cerulean) GetBaseClientURI() string {
 	return fmt.Sprintf("http://%s", server.Addr)
 }

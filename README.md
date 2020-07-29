@@ -21,13 +21,13 @@ import (
 )
 
 func TestSubscription(t *testing.T) {
-    server := cerulean.New("c27e7a81-b684-4fce-91d8-fed9e9bb534a")
-	client := subscriptions.NewClientWithBaseURI(server.GetBaseClientURI())
-	client.Authorizer = autorest.NullAuthorizer{}
+    server, err := cerulean.New("c27e7a81-b684-4fce-91d8-fed9e9bb534a")
+    client := subscriptions.NewClientWithBaseURI(server.GetBaseClientURI())
+    client.Authorizer = autorest.NullAuthorizer{}
 
-	resultPage, err := client.List(context.TODO())
-	if err != nil {
-		panic(err)
+    resultPage, err := client.List(context.TODO())
+    if err != nil {
+	    panic(err)
     }
     // do stuff with your mocked client
 }

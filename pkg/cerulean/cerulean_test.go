@@ -12,7 +12,7 @@ import (
 )
 
 func TestServerInitilization(t *testing.T) {
-	cerulean := New(":8080", "c27e7a81-b684-4fce-91d8-fed9e9bb534a")
+	cerulean := New("c27e7a81-b684-4fce-91d8-fed9e9bb534a")
 	assert.Equal(t, (*cerulean.Subscriptions)[0].ID, "/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a", "Received an invalid subscription id")
 
 	ts := httptest.NewServer(cerulean.Handlers["/subscriptions"])

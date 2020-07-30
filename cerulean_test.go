@@ -12,8 +12,8 @@ import (
 )
 
 func TestServerInitilization(t *testing.T) {
-	cerulean := New("c27e7a81-b684-4fce-91d8-fed9e9bb534a")
-	assert.Equal(t, (*cerulean.Subscriptions)[0].ID, "/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a", "Received an invalid subscription id")
+	cerulean := New()
+	assert.Equal(t, (*cerulean.Inventory.Subscriptions)[0].ID, fmt.Sprintf("/subscriptions/%s", cerulean.SubscriptionID), "Received an invalid subscription id")
 
 	ts := httptest.NewServer(cerulean.Handlers["/subscriptions"])
 	defer ts.Close()
@@ -31,12 +31,12 @@ func TestServerInitilization(t *testing.T) {
 	}
 
 	assert.Equal(t,
-		"{\"value\":[{\"id\":\"/subscriptions/c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"authorizationSource\":\"RoleBased\",\"managedByTenants\":[],\"subscriptionId\":\"c27e7a81-b684-4fce-91d8-fed9e9bb534a\",\"tenantId\":\"b5549535-3215-4868-a289-f80095c9e718\",\"displayName\":\"Pay-As-You-Go\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"Public_2014-09-01\",\"quotaId\":\"PayAsYouGo_2014-09-01\",\"spendingLimit\":\"Off\"}}],\"count\":{\"type\":\"\",\"value\":0}}",
+		fmt.Sprintf("{\"value\":[{\"id\":\"/subscriptions/%s\",\"authorizationSource\":\"RoleBased\",\"managedByTenants\":[],\"subscriptionId\":\"%s\",\"tenantId\":\"b5549535-3215-4868-a289-f80095c9e718\",\"displayName\":\"Pay-As-You-Go\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"Public_2014-09-01\",\"quotaId\":\"PayAsYouGo_2014-09-01\",\"spendingLimit\":\"Off\"}}],\"count\":{\"type\":\"\",\"value\":0}}", cerulean.SubscriptionID, cerulean.SubscriptionID),
 		string(body))
 }
 
 func TestListenAndServe(t *testing.T) {
-	cerulean := New("c27e7a81-b684-4fce-91d8-fed9e9bb534a")
+	cerulean := New()
 	cerulean.ListenAndServe()
 
 	endpoint := fmt.Sprintf("%s/subscriptions", cerulean.GetBaseClientURI())

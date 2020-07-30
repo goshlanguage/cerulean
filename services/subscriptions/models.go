@@ -3,6 +3,8 @@ package subscriptions
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/google/uuid"
 )
 
 var subscriptionsJSON = `
@@ -70,4 +72,14 @@ func NewSubscriptionResponse(subscriptionID string) SubscriptionResponse {
 // NewSubscription takes a string ID and returns a basic Subscription object
 func NewSubscription(subscriptionID string) Subscription {
 	return NewSubscriptionResponse(subscriptionID).Value[0]
+}
+
+// NewSubscriptionID is a helper that returns a new UUID
+func NewSubscriptionID() string {
+	id, err := uuid.NewUUID()
+	// TODO better error handling
+	if err != nil {
+		panic(err)
+	}
+	return id.String()
 }

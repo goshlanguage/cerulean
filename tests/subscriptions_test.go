@@ -13,7 +13,7 @@ import (
 )
 
 func TestGetSubscriptionsRoute(t *testing.T) {
-	server := cerulean.New("c27e7a81-b684-4fce-91d8-fed9e9bb534a")
+	server := cerulean.New()
 	client := subscriptions.NewClientWithBaseURI(server.GetBaseClientURI())
 	client.Authorizer = autorest.NullAuthorizer{}
 
@@ -25,5 +25,5 @@ func TestGetSubscriptionsRoute(t *testing.T) {
 	fmt.Println(resultPage)
 	_, err = resultPage.Values()[0].MarshalJSON()
 	assert.NoErrorf(t, err, "Error raised when marshalling the client response: %s", err)
-	// assert.Containsf(t, json, "c27e7a81-b684-4fce-91d8-fed9e9bb534a", "Didn't find our created sub in the azure sdk subscriptions client List resultPage.")
+	// assert.Containsf(t, json, cerulean.SubscriptionID, "Didn't find our created sub in the azure sdk subscriptions client List resultPage.")
 }

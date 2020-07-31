@@ -32,7 +32,7 @@ func New(subscriptionID string) Cerulean {
 
 	// TODO: Automatic iteration over handlers
 	handlers := make(map[string]http.Handler)
-	handlers["/subscriptions"] = subscriptions.GetSubscriptionsHandler(subs)
+	handlers["/subscriptions/"] = subscriptions.GetSubscriptionsHandler(subs)
 
 	mux := http.NewServeMux()
 	for route, handler := range handlers {

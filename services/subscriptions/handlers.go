@@ -56,7 +56,7 @@ func GetSubscriptionsHandler(subs *[]Subscription) http.Handler {
 // Response: {
 // 	"subscriptionLink": "/subscriptions/d0d6ee57-6530-4fca-93a6-b755a070be35"
 // }
-func PostSubscriptionsHandler(pattern string, subs *[]Subscription) http.Handler {
+func PostSubscriptionsHandler(subs *[]Subscription) http.Handler {
 	return http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
 	})
 }

@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/goshlanguage/cerulean/services/keyvault"
 	"github.com/goshlanguage/cerulean/services/subscriptions"
 )
 
@@ -22,6 +23,7 @@ type Cerulean struct {
 // Inventory represents our mocked inventory
 type Inventory struct {
 	Subscriptions *[]subscriptions.Subscription
+	Keyvaults     []keyvault.Keyvault
 }
 
 // New takes in a stringified address, eg: "127.0.0.1:8080" or ":8080",

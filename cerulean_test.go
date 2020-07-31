@@ -30,9 +30,10 @@ func TestServerInitilization(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	assert.Equal(t,
+	assert.Equal(
+		t,
 		fmt.Sprintf("{\"value\":[{\"id\":\"/subscriptions/%s\",\"authorizationSource\":\"RoleBased\",\"managedByTenants\":[],\"subscriptionId\":\"%s\",\"tenantId\":\"b5549535-3215-4868-a289-f80095c9e718\",\"displayName\":\"Pay-As-You-Go\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"Public_2014-09-01\",\"quotaId\":\"PayAsYouGo_2014-09-01\",\"spendingLimit\":\"Off\"}}],\"count\":{\"type\":\"\",\"value\":0}}", cerulean.SubscriptionID, cerulean.SubscriptionID),
-		string(body))
+		"Failed to list existing subscription. Got: %s from %s", string(body), addr)
 }
 
 func TestListenAndServe(t *testing.T) {

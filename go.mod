@@ -7,5 +7,6 @@ require (
 	github.com/Azure/go-autorest/autorest v0.11.2
 	github.com/Azure/go-autorest/autorest/to v0.4.0 // indirect
 	github.com/google/uuid v1.1.1
-	github.com/stretchr/testify v1.3.0
+	github.com/labstack/echo/v4 v4.1.16
+	github.com/stretchr/testify v1.4.0
 )

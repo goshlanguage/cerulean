@@ -23,7 +23,7 @@ func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
 // Response: {
 // 	"subscriptionLink": "/subscriptions/d0d6ee57-6530-4fca-93a6-b755a070be35"
 // }
-func PostSubscriptionsHandler(pattern string, subs *[]Subscription) echo.HandlerFunc {
+func (svc *SubscriptionService) PostSubscriptionsHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return nil
 	}

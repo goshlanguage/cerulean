@@ -5,15 +5,22 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/goshlanguage/cerulean/pkg/services/subscriptions"
+	"github.com/goshlanguage/cerulean/services/subscriptions"
 )
 
 // Cerulean holds the handlers and port to instantiate the mock server
 type Cerulean struct {
 	// Addr is the address that Cerulean should listen at, eg: 127.0.0.1:51234
-	Addr          string
-	Handlers      map[string]http.Handler
-	Mux           *http.ServeMux
+	Addr           string
+	Handlers       map[string]http.Handler
+	Inventory      Inventory
+	Mux            *http.ServeMux
+	SubscriptionID string
+	Subscriptions  *[]subscriptions.Subscription
+}
+
+// Inventory represents our mocked inventory
+type Inventory struct {
 	Subscriptions *[]subscriptions.Subscription
 }
 
@@ -23,10 +30,11 @@ type Cerulean struct {
 //
 // New generates a local address to be passed in when initializing a `BaseClient`
 //   in order to point it at the mock server.
-func New(subscriptionID string) Cerulean {
+func New() Cerulean {
 	addr := ":0"
 	// initSub is our initial SubscriptionID. This is important because there isn't an API route to create a SubscriptionID
 	// (or if there is please open an issue and let us know!)
+	subscriptionID := subscriptions.NewSubscriptionID()
 	initSub := subscriptions.NewSubscription(subscriptionID)
 	subs := &[]subscriptions.Subscription{initSub}
 
@@ -40,10 +48,13 @@ func New(subscriptionID string) Cerulean {
 	}
 
 	server := Cerulean{
-		Addr:          addr,
-		Handlers:      handlers,
-		Mux:           mux,
-		Subscriptions: subs,
+		Addr:     addr,
+		Handlers: handlers,
+		Inventory: Inventory{
+			Subscriptions: subs,
+		},
+		Mux:            mux,
+		SubscriptionID: subscriptionID,
 	}
 	server.ListenAndServe()
 

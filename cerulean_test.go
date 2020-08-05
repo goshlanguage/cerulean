@@ -43,7 +43,13 @@ func TestGetBaseClientURI(t *testing.T) {
 	cerulean := New()
 	addr := cerulean.GetBaseClientURI()
 	assert.NotEmpty(t, addr, "Expected a populated address to exist")
-	assert.Equal(t, addr, fmt.Sprintf("http://127.0.0.1%s", ":55555"), "Got inappropriate address for GetBaseClientURI(). Got: %s", addr)
+	assert.Regexpf(
+		t,
+		regexp.MustCompile("http://127.0.0.1:[0-9]{2,5}"),
+		addr,
+		"Got inappropriate address for GetBaseClientURI(). Got: %s",
+		addr,
+	)
 }
 
 func TestListenAndServe(t *testing.T) {

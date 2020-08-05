@@ -2,6 +2,7 @@ package cerulean
 
 import (
 	"fmt"
+	"net"
 
 	"github.com/goshlanguage/cerulean/services"
 	"github.com/goshlanguage/cerulean/services/subscriptions"
@@ -40,7 +41,7 @@ func New() Cerulean {
 	}
 
 	server := Cerulean{
-		Addr:               ":55555",
+		Addr:               ":0",
 		BaseSubscriptionID: baseSub,
 		Echo:               e,
 		Services:           svcs,
@@ -52,15 +53,14 @@ func New() Cerulean {
 
 // ListenAndServe starts our server.
 func (server *Cerulean) ListenAndServe() error {
-	// listener, err := net.Listen("tcp", ":0")
-	// if err != nil {
-	// 	return err
-	// }
-	// server.Addr = fmt.Sprintf(":%v", listener.Addr().(*net.TCPAddr).Port)
-	// defer listener.Close()
+	listener, err := net.Listen("tcp", ":0")
+	if err != nil {
+		return err
+	}
+	server.Addr = fmt.Sprintf(":%v", listener.Addr().(*net.TCPAddr).Port)
 
-	// server.Echo.Listener = listener
-	go server.Echo.Start(server.Addr)
+	server.Echo.Listener = listener
+	go server.Echo.Start(":0")
 
 	return nil
 }

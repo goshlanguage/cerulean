@@ -4,7 +4,10 @@ The API response for `/subscriptions` looks as follows (p.s. the UUIDs are fake,
 
 If you'd like to make your own API requests, you can follow [this guide to get you started](https://medium.com/@mauridb/calling-azure-rest-api-via-curl-eb10a06127).
 
+
 ## `GET`:
+
+https://docs.microsoft.com/en-us/rest/api/subscription/2018-03-01-preview/operations/list
 
 ```sh
 ➜ curl -s -X GET -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" "https://management.azure.com/subscriptions?api-version=2020-01-01" | jq .

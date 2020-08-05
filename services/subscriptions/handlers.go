@@ -1,56 +1,19 @@
 package subscriptions
 
 import (
-	"encoding/json"
 	"net/http"
 
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-/*
-GET:
-➜ curl -s -X GET -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" "https://management.azure.com/subscriptions?api-version=2020-01-01" | jq .
-{
-  "value": [
-    {
-      "id": "/subscriptions/b5549535-3215-4868-a289-f80095c9e718",
-      "authorizationSource": "RoleBased",
-      "managedByTenants": [],
-      "subscriptionId": "b5549535-3215-4868-a289-f80095c9e718",
-      "tenantId": "b5549535-3215-4868-a289-f80095c9e718",
-      "displayName": "Pay-As-You-Go",
-      "state": "Enabled",
-      "subscriptionPolicies": {
-        "locationPlacementId": "Public_2014-09-01",
-        "quotaId": "PayAsYouGo_2014-09-01",
-        "spendingLimit": "Off"
-      }
-    }
-  ],
-  "count": {
-    "type": "Total",
-    "value": 1
-  }
-}
-*/
-
 // GetSubscriptionsHandler is the GET method handler for /subscriptions
-func GetSubscriptionsHandler(subs *[]Subscription) func(c echo.Context) error {
+func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		response := SubscriptionResponse{
-			Value: *subs,
+			Value: svc.Subscriptions,
 		}
 
-		_, err := json.Marshal(response)
-		if err != nil {
-			panic(err)
-		}
-
-		// w.Header().Set("Content-Type", "application/json")
-		// w.Header().Set("Charset", "UTF-8")
-		// w.Write(b)
-
-		return nil
+		return c.JSON(http.StatusOK, response)
 	}
 }
 
@@ -60,7 +23,8 @@ func GetSubscriptionsHandler(subs *[]Subscription) func(c echo.Context) error {
 // Response: {
 // 	"subscriptionLink": "/subscriptions/d0d6ee57-6530-4fca-93a6-b755a070be35"
 // }
-func PostSubscriptionsHandler(pattern string, subs *[]Subscription) http.Handler {
-	return http.HandlerFunc(func(http.ResponseWriter, *http.Request) {
-	})
+func PostSubscriptionsHandler(pattern string, subs *[]Subscription) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		return nil
+	}
 }

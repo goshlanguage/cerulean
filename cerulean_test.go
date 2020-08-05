@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/http/httptest"
+	"regexp"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,12 +13,15 @@ import (
 
 func TestServerInitilization(t *testing.T) {
 	cerulean := New()
-	assert.Equal(t, (*cerulean.Inventory.Subscriptions)[0].ID, fmt.Sprintf("/subscriptions/%s", cerulean.SubscriptionID), "Received an invalid subscription id")
+	assert.Regexp(
+		t,
+		regexp.MustCompile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{8}"),
+		cerulean.BaseSubscriptionID,
+		"Received an invalid subscription id: %s",
+		cerulean.BaseSubscriptionID,
+	)
 
-	ts := httptest.NewServer(cerulean.Handlers["/subscriptions"])
-	defer ts.Close()
-
-	addr := fmt.Sprintf("%s/subscriptions", ts.URL)
+	addr := fmt.Sprintf("%s/subscriptions", cerulean.GetBaseClientURI())
 	res, err := http.Get(addr)
 	if err != nil {
 		log.Fatal(err)
@@ -31,16 +34,24 @@ func TestServerInitilization(t *testing.T) {
 	}
 
 	assert.Equal(t,
-		fmt.Sprintf("{\"value\":[{\"id\":\"/subscriptions/%s\",\"authorizationSource\":\"RoleBased\",\"managedByTenants\":[],\"subscriptionId\":\"%s\",\"tenantId\":\"b5549535-3215-4868-a289-f80095c9e718\",\"displayName\":\"Pay-As-You-Go\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"Public_2014-09-01\",\"quotaId\":\"PayAsYouGo_2014-09-01\",\"spendingLimit\":\"Off\"}}],\"count\":{\"type\":\"\",\"value\":0}}", cerulean.SubscriptionID, cerulean.SubscriptionID),
-		string(body))
+		fmt.Sprintf("{\"value\":[{\"id\":\"/subscriptions/%s\",\"authorizationSource\":\"RoleBased\",\"managedByTenants\":[],\"subscriptionId\":\"%s\",\"tenantId\":\"b5549535-3215-4868-a289-f80095c9e718\",\"displayName\":\"Pay-As-You-Go\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"Public_2014-09-01\",\"quotaId\":\"PayAsYouGo_2014-09-01\",\"spendingLimit\":\"Off\"}}],\"count\":{\"type\":\"\",\"value\":0}}\n", cerulean.BaseSubscriptionID, cerulean.BaseSubscriptionID),
+		string(body),
+	)
+}
+
+func TestGetBaseClientURI(t *testing.T) {
+	cerulean := New()
+	addr := cerulean.GetBaseClientURI()
+	assert.NotEmpty(t, addr, "Expected a populated address to exist")
+	assert.Equal(t, addr, fmt.Sprintf("http://127.0.0.1%s", ":55555"), "Got inappropriate address for GetBaseClientURI(). Got: %s", addr)
 }
 
 func TestListenAndServe(t *testing.T) {
 	cerulean := New()
-	cerulean.ListenAndServe()
 
 	endpoint := fmt.Sprintf("%s/subscriptions", cerulean.GetBaseClientURI())
 	resp, err := http.Get(endpoint)
+
 	assert.NoErrorf(t, err, "Expected not to receive an error when requesting from the cerulean mock server, got: %s", err)
 	assert.Equal(t, 200, resp.StatusCode, "Expected a 200 status code from the cerulean mock server")
 }

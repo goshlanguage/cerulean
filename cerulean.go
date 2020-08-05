@@ -2,59 +2,48 @@ package cerulean
 
 import (
 	"fmt"
-	"net"
-	"net/http"
 
+	"github.com/goshlanguage/cerulean/services"
 	"github.com/goshlanguage/cerulean/services/subscriptions"
+	"github.com/labstack/echo/v4"
 )
 
 // Cerulean holds the handlers and port to instantiate the mock server
 type Cerulean struct {
 	// Addr is the address that Cerulean should listen at, eg: 127.0.0.1:51234
-	Addr           string
-	Handlers       map[string]http.Handler
-	Inventory      Inventory
-	Mux            *http.ServeMux
-	SubscriptionID string
-	Subscriptions  *[]subscriptions.Subscription
+	Addr string
+	// BaseSubscriptionID is the base subscriptionID created and the default subscriptionID used for tests
+	BaseSubscriptionID string
+	Echo               *echo.Echo
+	Services           []services.Service
 }
 
-// Inventory represents our mocked inventory
-type Inventory struct {
-	Subscriptions *[]subscriptions.Subscription
-}
-
-// New takes in a stringified address, eg: "127.0.0.1:8080" or ":8080",
-//   as well as a mock subscriptionID to instiate your Cerulean instance with
+// New sets up an instance of our mock and returns it
 //   and returns a the mock server
 //
 // New generates a local address to be passed in when initializing a `BaseClient`
 //   in order to point it at the mock server.
 func New() Cerulean {
-	addr := ":0"
-	// initSub is our initial SubscriptionID. This is important because there isn't an API route to create a SubscriptionID
-	// (or if there is please open an issue and let us know!)
-	subscriptionID := subscriptions.NewSubscriptionID()
-	initSub := subscriptions.NewSubscription(subscriptionID)
-	subs := &[]subscriptions.Subscription{initSub}
+	e := echo.New()
 
-	// TODO: Automatic iteration over handlers
-	handlers := make(map[string]http.Handler)
-	handlers["/subscriptions"] = subscriptions.GetSubscriptionsHandler(subs)
+	subscriptionsSVC := subscriptions.NewSubscriptionService()
+	baseSub := subscriptionsSVC.(*subscriptions.SubscriptionService).GetBaseSubscriptionID()
 
-	mux := http.NewServeMux()
-	for route, handler := range handlers {
-		mux.Handle(route, handler)
+	svcs := []services.Service{
+		subscriptionsSVC,
+	}
+
+	for _, service := range svcs {
+		for endpoint, f := range service.GetHandlers() {
+			e.GET(endpoint, f)
+		}
 	}
 
 	server := Cerulean{
-		Addr:     addr,
-		Handlers: handlers,
-		Inventory: Inventory{
-			Subscriptions: subs,
-		},
-		Mux:            mux,
-		SubscriptionID: subscriptionID,
+		Addr:               ":55555",
+		BaseSubscriptionID: baseSub,
+		Echo:               e,
+		Services:           svcs,
 	}
 	server.ListenAndServe()
 
@@ -63,14 +52,16 @@ func New() Cerulean {
 
 // ListenAndServe starts our server.
 func (server *Cerulean) ListenAndServe() error {
-	listener, err := net.Listen("tcp", ":0")
-	if err != nil {
-		return err
-	}
+	// listener, err := net.Listen("tcp", ":0")
+	// if err != nil {
+	// 	return err
+	// }
+	// server.Addr = fmt.Sprintf(":%v", listener.Addr().(*net.TCPAddr).Port)
+	// defer listener.Close()
 
-	server.Addr = fmt.Sprintf(":%v", listener.Addr().(*net.TCPAddr).Port)
+	// server.Echo.Listener = listener
+	go server.Echo.Start(server.Addr)
 
-	go http.Serve(listener, server.Mux)
 	return nil
 }
 

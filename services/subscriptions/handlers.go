@@ -23,8 +23,15 @@ func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
 // Response: {
 // 	"subscriptionLink": "/subscriptions/d0d6ee57-6530-4fca-93a6-b755a070be35"
 // }
+// TODO: Figure out how we're going to handle the api-versioning query param
 func (svc *SubscriptionService) PostSubscriptionsHandler() echo.HandlerFunc {
+	type response struct {
+		SubscriptionLink string `json:"subscriptionLink"`
+	}
+
 	return func(c echo.Context) error {
-		return nil
+		newSubscription := NewSubscription()
+		svc.Subscriptions = append(svc.Subscriptions, newSubscription)
+		return c.JSON(http.StatusCreated, response{newSubscription.ID})
 	}
 }

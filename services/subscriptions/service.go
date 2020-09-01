@@ -24,7 +24,7 @@ func NewSubscriptionService() services.Service {
 func (svc *SubscriptionService) GetHandlers() map[string]services.Handler {
 	svcMap := make(map[string]services.Handler)
 	svcMap["/subscriptions"] = services.Handler{http.MethodGet, svc.GetSubscriptionsHandler()}
-	svcMap["/providers/Microsoft.Billing/billingAccounts/:billingAccountName/billingProfiles/:billingProfileName/invoiceSections/:invoiceSectionName/providers/Microsoft.Subscription/createSubscription?api-version=2018-11-01-preview"] = services.Handler{http.MethodPost, svc.PostSubscriptionsHandler()}
+	svcMap["/providers/Microsoft.Billing/billingAccounts/:billingAccountName/billingProfiles/:billingProfileName/invoiceSections/:invoiceSectionName/providers/Microsoft.Subscription/createSubscription"] = services.Handler{http.MethodPost, svc.PostSubscriptionsHandler()}
 	return svcMap
 }
 

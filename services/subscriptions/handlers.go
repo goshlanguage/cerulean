@@ -1,6 +1,7 @@
 package subscriptions
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -32,6 +33,9 @@ func (svc *SubscriptionService) PostSubscriptionsHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		newSubscription := NewSubscription()
 		svc.Subscriptions = append(svc.Subscriptions, newSubscription)
-		return c.JSON(http.StatusCreated, response{newSubscription.ID})
+		// The HTTP "Location" header has to be set to a non-empty dummy value
+		c.Response().Header().Set(echo.HeaderLocation, "https://cerulean")
+		c.Response().WriteHeader(http.StatusCreated)
+		return json.NewEncoder(c.Response()).Encode(response{newSubscription.ID})
 	}
 }

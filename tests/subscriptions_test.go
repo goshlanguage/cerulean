@@ -2,7 +2,7 @@ package tests
 
 import (
 	"context"
-	"log"
+	"io/ioutil"
 	"testing"
 
 	previewSubscriptions "github.com/Azure/azure-sdk-for-go/services/preview/subscription/mgmt/2019-10-01-preview/subscription"
@@ -42,13 +42,9 @@ func TestPostSubscriptionsRoute(t *testing.T) {
 		panic(err)
 	}
 
-	log.Printf("%+v", resultPage)
+	bodyBytes, err := ioutil.ReadAll(resultPage.Response().Body)
+	assert.NoErrorf(t, err, "Error raised when marshalling the client response: %s", err)
 
-	/*
-		_, err = resultPage.Values()[0].MarshalJSON()
-		assert.NoErrorf(t, err, "Error raised when marshalling the client response: %s", err)
-
-		assert.Containsf(t, *resultPage.Values()[0].ID, server.BaseSubscriptionID, "Didn't find our created sub in the Azure SDK subscriptions client List resultPage.")
-		assert.Containsf(t, *resultPage.Values()[0].SubscriptionID, server.BaseSubscriptionID, "Didn't find our created sub in the Azure SDK subscriptions client List resultPage.")
-	*/
+	// TODO: Eventually flesh out this test to do more
+	assert.Containsf(t, string(bodyBytes), "subscriptionLink", "Didn't find our created sub in the Azure SDK subscription creation response.")
 }

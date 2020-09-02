@@ -26,8 +26,8 @@ type ResourceGroupsResponse struct {
 	} `json:"properties"`
 }
 
-// NewSubscriptionResponse takes a string ID and returns a basic ResourceGroupsResponse object
-func NewSubscriptionResponse(subscriptionID string, resourceGroupName string) ResourceGroupsResponse {
+// NewResourceGroupsResponse takes a string ID and returns a basic ResourceGroupsResponse object
+func NewResourceGroupsResponse(subscriptionID string, resourceGroupName string) ResourceGroupsResponse {
 	var response ResourceGroupsResponse
 	json.Unmarshal([]byte(resourceGroupsJSON), &response)
 

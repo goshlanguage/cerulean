@@ -8,7 +8,7 @@ import (
 // PutResourceGroupsHandler is the PUT method handler for /subscriptions/{subscription-id}/resourceGroups
 func PutResourceGroupsHandler(subscriptionID string, resourceGroupName string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		b, err := json.Marshal(NewSubscriptionResponse(subscriptionID, resourceGroupName))
+		b, err := json.Marshal(NewResourceGroupsResponse(subscriptionID, resourceGroupName))
 		if err != nil {
 			panic(err)
 		}

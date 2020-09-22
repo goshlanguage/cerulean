@@ -16,6 +16,15 @@ var resourceGroupsJSON = `
 }
 `
 
+type ResourceGroup struct {
+	ID         string `json:"id"`
+	Name       string `json:"name"`
+	Location   string `json:"location"`
+	Properties struct {
+		ProvisioningState string `json:"provisioningState"`
+	} `json:"properties"`
+}
+
 // ResourceGroupsResponse models the response from the Azure API when creating or updating a resourceGroup
 type ResourceGroupsResponse struct {
 	ID         string `json:"id"`

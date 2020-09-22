@@ -9,7 +9,7 @@ import (
 // ResourceGroupsService satisfies the Service interface, and is used to start and maintain the ResourceGroup Service
 type ResourceGroupsService struct {
 	// ResourceGroups is our statebag
-	ResourceGroups []string
+	ResourceGroups []ResourceGroup
 }
 
 // NewResourceGroupsService is a factory for the ResourceGroupsService, which satisfies the services.Service interface

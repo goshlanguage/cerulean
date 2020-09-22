@@ -20,6 +20,6 @@ func NewResourceGroupsService() services.Service {
 // GetHandlers returns the HTTP GET Echo handlers that the service needs in order to operate
 func (svc *ResourceGroupsService) GetHandlers() map[string]services.Handler {
 	svcMap := make(map[string]services.Handler)
-	svcMap["/providers/GroupsClient.CreateOrUpdate"] = services.Handler{http.MethodPut, svc.PutResourceGroupsHandler()}
+	svcMap["/subscriptions/:subscriptionId/resourcegroups/:resourceGroupName"] = services.Handler{http.MethodPut, svc.PutResourceGroupsHandler()}
 	return svcMap
 }

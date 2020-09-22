@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/goshlanguage/cerulean/services"
+	"github.com/goshlanguage/cerulean/services/resourceGroups"
 	"github.com/goshlanguage/cerulean/services/subscriptions"
 	"github.com/labstack/echo/v4"
 )
@@ -30,10 +31,14 @@ func New() Cerulean {
 	e.HideBanner = true // Make log output less noisy by removing ASCII artwork
 
 	subscriptionsSVC := subscriptions.NewSubscriptionService()
+	// We need to start Cerulean with at least one sub in the grab bag
 	baseSub := subscriptionsSVC.(*subscriptions.SubscriptionService).GetBaseSubscriptionID()
+
+	resourceGroupsSVC := resourceGroups.NewResourceGroupsService()
 
 	svcs := []services.Service{
 		subscriptionsSVC,
+		resourceGroupsSVC,
 	}
 
 	for _, service := range svcs {

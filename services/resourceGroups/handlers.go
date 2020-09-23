@@ -2,6 +2,7 @@ package resourceGroups
 
 import (
 	"encoding/json"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -16,6 +17,6 @@ func (svc *ResourceGroupsService) PutResourceGroupsHandler() echo.HandlerFunc {
 		}
 		c.Response().Header().Set("Content-Type", "application/json")
 		c.Response().Header().Set("Charset", "UTF-8")
-		return json.NewEncoder(c.Response()).Encode(b)
+		return c.JSON(http.StatusOK, b)
 	}
 }

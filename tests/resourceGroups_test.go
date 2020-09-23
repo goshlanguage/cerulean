@@ -28,9 +28,6 @@ func TestPutResourceGroupsRoute(t *testing.T) {
 		panic(err)
 	}
 
-	_, err = resourceGroup.MarshalJSON()
-	assert.NoErrorf(t, err, "Error raised when marshalling the client response: %s", err)
-
 	assert.Equal(t, resourceGroup.Name, resourceGroupName, "Created resource group name does not match expected value")
 	assert.Equal(t, resourceGroup.Location, resourceGroupLocation, "Created resource group location does not match expected value")
 }

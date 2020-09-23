@@ -22,11 +22,11 @@ func TestServerInitilization(t *testing.T) {
 
 	assert.NotNil(
 		t,
-		server.Handlers["/subscriptions/"],
+		server.Handlers["/subscriptions"],
 		"/subscriptions subscription handler not populated.",
 	)
 
-	ts := httptest.NewServer(server.Handlers["/subscriptions/"])
+	ts := httptest.NewServer(server.Handlers["/subscriptions"])
 	defer ts.Close()
 
 	addr := fmt.Sprintf("%s/subscriptions/", ts.URL)

@@ -17,6 +17,7 @@ type Cerulean struct {
 	Inventory      Inventory
 	Mux            *http.ServeMux
 	SubscriptionID string
+	TenantID       string
 	Subscriptions  *[]subscriptions.Subscription
 }
 
@@ -43,6 +44,7 @@ func New() Cerulean {
 	// TODO: Automatic iteration over handlers
 	handlers := make(map[string]http.Handler)
 	handlers["/subscriptions"] = subscriptions.GetSubscriptionsHandler(subs)
+	handlers["/keyvaults"] = subscriptions.GetSubscriptionsHandler(subs)
 
 	mux := http.NewServeMux()
 	for route, handler := range handlers {
@@ -57,6 +59,7 @@ func New() Cerulean {
 		},
 		Mux:            mux,
 		SubscriptionID: subscriptionID,
+		TenantID:       "00000000-0000-0000-0000-000000000000",
 	}
 	server.ListenAndServe()
 

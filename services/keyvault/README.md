@@ -16,6 +16,10 @@ https://docs.microsoft.com/en-us/rest/api/keyvault/vaults/checknameavailability
 
 ## Create or Update - PUT
 
+```
+PUT https://management.azure.com/subscriptions/00000000-0000-0000-0000-000000000000/resourceGroups/sample-resource-group/providers/Microsoft.KeyVault/vaults/sample-vault?api-version=2019-09-01
+```
+
 https://docs.microsoft.com/en-us/rest/api/keyvault/vaults/createorupdate#vaultproperties
 
 ```json

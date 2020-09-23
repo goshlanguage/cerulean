@@ -12,13 +12,24 @@ import (
 )
 
 func TestServerInitilization(t *testing.T) {
-	cerulean := New()
-	assert.Equal(t, (*cerulean.Inventory.Subscriptions)[0].ID, fmt.Sprintf("/subscriptions/%s", cerulean.SubscriptionID), "Received an invalid subscription id")
+	server := New()
+	assert.Equal(
+		t,
+		(*server.Inventory.Subscriptions)[0].ID,
+		fmt.Sprintf("/subscriptions/%s", server.SubscriptionID),
+		"Received an invalid subscription id",
+	)
 
-	ts := httptest.NewServer(cerulean.Handlers["/subscriptions"])
+	assert.NotNil(
+		t,
+		server.Handlers["/subscriptions/"],
+		"/subscriptions subscription handler not populated.",
+	)
+
+	ts := httptest.NewServer(server.Handlers["/subscriptions/"])
 	defer ts.Close()
 
-	addr := fmt.Sprintf("%s/subscriptions", ts.URL)
+	addr := fmt.Sprintf("%s/subscriptions/", ts.URL)
 	res, err := http.Get(addr)
 	if err != nil {
 		log.Fatal(err)
@@ -30,10 +41,12 @@ func TestServerInitilization(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	assert.Equal(
+	assert.Containsf(
 		t,
-		fmt.Sprintf("{\"value\":[{\"id\":\"/subscriptions/%s\",\"authorizationSource\":\"RoleBased\",\"managedByTenants\":[],\"subscriptionId\":\"%s\",\"tenantId\":\"b5549535-3215-4868-a289-f80095c9e718\",\"displayName\":\"Pay-As-You-Go\",\"state\":\"Enabled\",\"subscriptionPolicies\":{\"locationPlacementId\":\"Public_2014-09-01\",\"quotaId\":\"PayAsYouGo_2014-09-01\",\"spendingLimit\":\"Off\"}}],\"count\":{\"type\":\"\",\"value\":0}}", cerulean.SubscriptionID, cerulean.SubscriptionID),
-		"Failed to list existing subscription. Got: %s from %s", string(body), addr)
+		string(body),
+		fmt.Sprintf(`{"value":[{"id":"/subscriptions/%s"`, server.SubscriptionID),
+		fmt.Sprintf("Subscription response didn't return default subscription. Got: %s from %s", string(body), addr),
+	)
 }
 
 func TestListenAndServe(t *testing.T) {

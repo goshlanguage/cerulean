@@ -30,7 +30,5 @@ jobs:
         go-version: ${{ matrix.go-version }}
     - name: Checkout code
       uses: actions/checkout@v2
-    - name: Install dependencies for ubuntu
-      run: sudo apt update && sudo apt install libgl1-mesa-dev and xorg-dev # install GLFW dependencies (https://github.com/go-gl/glfw)
     - name: Test
       run: go test -v ./...

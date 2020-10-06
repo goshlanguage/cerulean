@@ -1,8 +1,9 @@
 package subscriptions
 
 import (
+	"net/http"
+
 	"github.com/goshlanguage/cerulean/services"
-	"github.com/labstack/echo/v4"
 )
 
 // SubscriptionService satisfies the Service interface, and is used to start and maintain the Subscription Service
@@ -19,10 +20,11 @@ func NewSubscriptionService() services.Service {
 	}
 }
 
-// GetHandlers returns the echo handlers that the service needs in order to operate
-func (svc *SubscriptionService) GetHandlers() map[string]echo.HandlerFunc {
-	svcMap := make(map[string]echo.HandlerFunc)
-	svcMap["/subscriptions"] = svc.GetSubscriptionsHandler()
+// GetHandlers returns the HTTP GET Echo handlers that the service needs in order to operate
+func (svc *SubscriptionService) GetHandlers() map[string]services.Handler {
+	svcMap := make(map[string]services.Handler)
+	svcMap["/subscriptions"] = services.Handler{http.MethodGet, svc.GetSubscriptionsHandler()}
+	svcMap["/providers/Microsoft.Billing/billingAccounts/:billingAccountName/billingProfiles/:billingProfileName/invoiceSections/:invoiceSectionName/providers/Microsoft.Subscription/createSubscription"] = services.Handler{http.MethodPost, svc.PostSubscriptionsHandler()}
 	return svcMap
 }
 

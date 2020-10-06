@@ -1,6 +1,7 @@
 package subscriptions
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -13,8 +14,7 @@ func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
 			Value: svc.Subscriptions,
 		}
 
-		c.JSON(http.StatusOK, response)
-		return nil
+		return c.JSON(http.StatusOK, response)
 	}
 }
 
@@ -24,8 +24,18 @@ func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
 // Response: {
 // 	"subscriptionLink": "/subscriptions/d0d6ee57-6530-4fca-93a6-b755a070be35"
 // }
-func PostSubscriptionsHandler(pattern string, subs *[]Subscription) echo.HandlerFunc {
+// TODO: Figure out how we're going to handle the api-versioning query param
+func (svc *SubscriptionService) PostSubscriptionsHandler() echo.HandlerFunc {
+	type response struct {
+		SubscriptionLink string `json:"subscriptionLink"`
+	}
+
 	return func(c echo.Context) error {
-		return nil
+		newSubscription := NewSubscription()
+		svc.Subscriptions = append(svc.Subscriptions, newSubscription)
+		// The HTTP "Location" header has to be set to a non-empty dummy value
+		c.Response().Header().Set(echo.HeaderLocation, "https://cerulean")
+		c.Response().WriteHeader(http.StatusCreated)
+		return json.NewEncoder(c.Response()).Encode(response{newSubscription.ID})
 	}
 }

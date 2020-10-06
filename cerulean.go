@@ -3,9 +3,11 @@ package cerulean
 import (
 	"fmt"
 	"net"
+	"net/http"
 
 	"github.com/goshlanguage/cerulean/pkg/lightdb"
 	"github.com/goshlanguage/cerulean/services"
+	"github.com/goshlanguage/cerulean/services/resourceGroups"
 	"github.com/goshlanguage/cerulean/services/subscriptions"
 	"github.com/labstack/echo/v4"
 )
@@ -28,17 +30,41 @@ type Cerulean struct {
 //   in order to point it at the mock server.
 func New() Cerulean {
 	e := echo.New()
+	e.HideBanner = true // Make log output less noisy by removing ASCII artwork
 
 	subscriptionsSVC := subscriptions.NewSubscriptionService()
+	// We need to start Cerulean with at least one sub in the grab bag
 	baseSub := subscriptionsSVC.(*subscriptions.SubscriptionService).GetBaseSubscriptionID()
+
+	resourceGroupsSVC := resourceGroups.NewResourceGroupsService()
 
 	svcs := []services.Service{
 		subscriptionsSVC,
+		resourceGroupsSVC,
 	}
 
 	for _, service := range svcs {
-		for endpoint, f := range service.GetHandlers() {
-			e.GET(endpoint, f)
+		for endpoint, handlerStruct := range service.GetHandlers() {
+			switch verb := handlerStruct.Verb; verb {
+			case http.MethodGet:
+				e.GET(endpoint, handlerStruct.Func)
+			case http.MethodHead:
+				e.HEAD(endpoint, handlerStruct.Func)
+			case http.MethodPost:
+				e.POST(endpoint, handlerStruct.Func)
+			case http.MethodPut:
+				e.PUT(endpoint, handlerStruct.Func)
+			case http.MethodPatch:
+				e.PATCH(endpoint, handlerStruct.Func)
+			case http.MethodDelete:
+				e.DELETE(endpoint, handlerStruct.Func)
+			case http.MethodConnect:
+				e.CONNECT(endpoint, handlerStruct.Func)
+			case http.MethodOptions:
+				e.OPTIONS(endpoint, handlerStruct.Func)
+			case http.MethodTrace:
+				e.TRACE(endpoint, handlerStruct.Func)
+			}
 		}
 	}
 

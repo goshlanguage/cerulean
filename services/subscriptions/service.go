@@ -20,7 +20,7 @@ func NewSubscriptionService() services.Service {
 	}
 }
 
-// GetHandlers returns the HTTP GET Echo handlers that the service needs in order to operate
+// GetHandlers returns a map of all HTTP Echo handlers that the service needs in order to operate
 func (svc *SubscriptionService) GetHandlers() map[string]services.Handler {
 	svcMap := make(map[string]services.Handler)
 	svcMap["/subscriptions"] = services.Handler{http.MethodGet, svc.GetSubscriptionsHandler()}

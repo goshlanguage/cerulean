@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net"
 
+	"github.com/goshlanguage/cerulean/pkg/lightdb"
 	"github.com/goshlanguage/cerulean/services"
 	"github.com/goshlanguage/cerulean/services/subscriptions"
 	"github.com/labstack/echo/v4"
@@ -17,6 +18,7 @@ type Cerulean struct {
 	BaseSubscriptionID string
 	Echo               *echo.Echo
 	Services           []services.Service
+	Store              *lightdb.Store
 }
 
 // New sets up an instance of our mock and returns it
@@ -45,6 +47,7 @@ func New() Cerulean {
 		BaseSubscriptionID: baseSub,
 		Echo:               e,
 		Services:           svcs,
+		Store:              lightdb.NewStore(),
 	}
 	server.ListenAndServe()
 

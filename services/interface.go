@@ -1,6 +1,8 @@
 package services
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/labstack/echo/v4"
+)
 
 // Service aims to help autodiscover our avialable services
 // TODO Finish service interface and implement

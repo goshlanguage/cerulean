@@ -5,6 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/goshlanguage/cerulean/pkg/lightdb"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
@@ -16,12 +17,15 @@ func TestGetSubscriptionsHandler(t *testing.T) {
 	rec := httptest.NewRecorder()
 	ctx := e.NewContext(req, rec)
 
-	subscriptionService := SubscriptionService{}
+	s := lightdb.NewStore()
+	subscriptionService := SubscriptionService{
+		Store: s,
+	}
 	getHandler := subscriptionService.GetSubscriptionsHandler()
 
-	// Assertions
+	// Assert that there were no errors and our subscriptions service returned a blank response because no subscriptions exist
 	if assert.NoError(t, getHandler(ctx)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
-		assert.Contains(t, rec.Body.String(), "{\"value\":null,\"count\":{\"type\":\"\",\"value\":0}}")
+		assert.Contains(t, rec.Body.String(), "")
 	}
 }

@@ -11,4 +11,6 @@
     }
     ```
 1. Make a `service.go` file in your new directory (e.g. `/services/subscriptions/service.go`), implement `GetHandlers()` as defined in `/services/interface.go`, and add your new handler functions (defined in `handlers.go` that you created in a step above) to the map that's returned
+1. Open `cerulean.go` in the root of the repository and add your new service to the `svcs` slice inside the `New()` function
+    - This allows Echo to find and map our endpoints to HTTP listeners
 1. To finish things off, be a good person and create a `handlers_test.go` file and write a couple unit tests

@@ -9,28 +9,28 @@ import (
 func TestStore(t *testing.T) {
 	expected := "{'a': 'b'}"
 
-	s := NewStore()
-	s.Put("/subscriptions/", "{'a': 'b'}")
+	store := NewStore()
+	store.Put("/subscriptions/", "{'a': 'b'}")
 
-	v := s.Get("/subscriptions/")
+	value := store.Get("/subscriptions/")
 	assert.Equal(
 		t,
 		expected,
-		v,
+		value,
 		"Got incorrect value from key. Expected %s, got: %s",
 		expected,
-		v,
+		value,
 	)
 
-	s.Delete("/subscriptions/")
+	store.Delete("/subscriptions/")
 
-	v = s.Get("/subscriptions/")
-	assert.Equal(t, v, "")
+	value = store.Get("/subscriptions/")
+	assert.Equal(t, value, "")
 }
 
 // TestGet shows a range of keys can be used
 func TestGet(t *testing.T) {
-	s := NewStore()
+	store := NewStore()
 	gettests := []struct {
 		key      string
 		expected string
@@ -44,7 +44,7 @@ func TestGet(t *testing.T) {
 	}
 	for _, tt := range gettests {
 		t.Run(tt.key, func(t *testing.T) {
-			val := s.Get(tt.key)
+			val := store.Get(tt.key)
 			assert.Equal(t, val, tt.expected, "Got unexpected value for key: %s, expected: %s, got: %s", tt.key, tt.expected, val)
 		})
 	}

@@ -3,6 +3,7 @@ package cerulean
 import (
 	"fmt"
 	"net"
+	"net/http"
 
 	"github.com/goshlanguage/cerulean/pkg/lightdb"
 	"github.com/goshlanguage/cerulean/services"
@@ -29,6 +30,7 @@ type Cerulean struct {
 func New() Cerulean {
 	e := echo.New()
 	s := lightdb.NewStore()
+	e.HideBanner = true // Make log output less noisy by removing ASCII artwork
 
 	subscriptionsSVC := subscriptions.NewSubscriptionService(s)
 	baseSub := subscriptionsSVC.GetBaseSubscriptionID()
@@ -38,8 +40,27 @@ func New() Cerulean {
 	}
 
 	for _, service := range svcs {
-		for endpoint, f := range service.GetHandlers() {
-			e.GET(endpoint, f)
+		for endpoint, handlerStruct := range service.GetHandlers() {
+			switch verb := handlerStruct.Verb; verb {
+			case http.MethodGet:
+				e.GET(endpoint, handlerStruct.Func)
+			case http.MethodHead:
+				e.HEAD(endpoint, handlerStruct.Func)
+			case http.MethodPost:
+				e.POST(endpoint, handlerStruct.Func)
+			case http.MethodPut:
+				e.PUT(endpoint, handlerStruct.Func)
+			case http.MethodPatch:
+				e.PATCH(endpoint, handlerStruct.Func)
+			case http.MethodDelete:
+				e.DELETE(endpoint, handlerStruct.Func)
+			case http.MethodConnect:
+				e.CONNECT(endpoint, handlerStruct.Func)
+			case http.MethodOptions:
+				e.OPTIONS(endpoint, handlerStruct.Func)
+			case http.MethodTrace:
+				e.TRACE(endpoint, handlerStruct.Func)
+			}
 		}
 	}
 

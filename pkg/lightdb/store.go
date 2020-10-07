@@ -1,7 +1,6 @@
 package lightdb
 
-import "fmt"
-
+// Store keeps our data and allows us to pass around a reference to this map.
 type Store struct {
 	Data map[string]string
 }
@@ -14,21 +13,19 @@ func NewStore() *Store {
 }
 
 // Put adds a new key value pair to the store or updates the key if present
-func (s *Store) Put(key string, value string) error {
+func (s *Store) Put(key string, value string) {
 	s.Data[key] = value
-	return nil
 }
 
-// Get returns the value for the key if it exists
-func (s *Store) Get(key string) (string, error) {
+// Get returns the value for the key if it exists or an empty string
+func (s *Store) Get(key string) string {
 	if val, ok := s.Data[key]; ok {
-		return val, nil
+		return val
 	}
-	return "", fmt.Errorf("Key does not exist")
+	return ""
 }
 
 // Delete takes a key and removes the value stored there if it exists
-func (s *Store) Delete(key string) error {
+func (s *Store) Delete(key string) {
 	delete(s.Data, key)
-	return nil
 }

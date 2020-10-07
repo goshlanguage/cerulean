@@ -1,6 +1,8 @@
 package services
 
-import "github.com/labstack/echo/v4"
+import (
+	"github.com/labstack/echo/v4"
+)
 
 // Handler is a helper struct that allows us to iterate over handlers to pass to Echo
 type Handler struct {

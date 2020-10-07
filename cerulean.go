@@ -29,10 +29,11 @@ type Cerulean struct {
 //   in order to point it at the mock server.
 func New() Cerulean {
 	e := echo.New()
+	s := lightdb.NewStore()
 	e.HideBanner = true // Make log output less noisy by removing ASCII artwork
 
-	subscriptionsSVC := subscriptions.NewSubscriptionService()
-	baseSub := subscriptionsSVC.(*subscriptions.SubscriptionService).GetBaseSubscriptionID()
+	subscriptionsSVC := subscriptions.NewSubscriptionService(s)
+	baseSub := subscriptionsSVC.GetBaseSubscriptionID()
 
 	svcs := []services.Service{
 		subscriptionsSVC,

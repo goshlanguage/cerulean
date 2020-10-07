@@ -1,6 +1,7 @@
 package subscriptions
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -9,11 +10,23 @@ import (
 // GetSubscriptionsHandler is the GET method handler for /subscriptions
 func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		response := SubscriptionResponse{
-			Value: svc.Subscriptions,
-		}
+		subsString := svc.Store.Get("subscriptions")
 
-		return c.JSON(http.StatusOK, response)
+		// If something is stored in the db
+		if subsString != "" {
+			subs := []Subscription{}
+			err := json.Unmarshal([]byte(subsString), &subs)
+			if err != nil {
+				panic(err)
+			}
+
+			response := SubscriptionResponse{
+				Value: subs,
+			}
+
+			c.JSON(http.StatusOK, response)
+		}
+		return nil
 	}
 }
 

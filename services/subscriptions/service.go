@@ -49,6 +49,22 @@ func (svc *SubscriptionService) GetBaseSubscriptionID() string {
 	return subs[0].SubscriptionID
 }
 
+// GetSubscriptions returns the Stores state
+func (svc *SubscriptionService) GetSubscriptions() ([]Subscription, error) {
+	var subs []Subscription
+	subsString, err := svc.Store.Get(serviceKey)
+	if err != nil {
+		return subs, err
+	}
+
+	err = json.Unmarshal([]byte(subsString), &subs)
+	if err != nil {
+		return subs, err
+	}
+
+	return subs, nil
+}
+
 // AddSubscription takes a subscription and adds it to the store
 func (svc *SubscriptionService) AddSubscription(s Subscription) error {
 	subsString, err := svc.Store.Get(serviceKey)

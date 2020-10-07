@@ -2,9 +2,15 @@ package services
 
 import "github.com/labstack/echo/v4"
 
-// Service aims to help autodiscover our avialable services
-// TODO Finish service interface and implement
+// Handler is a helper struct that allows us to iterate over handlers to pass to Echo
+type Handler struct {
+	// Verb is a string containing an HTTP verb value (https://golang.org/src/net/http/method.go)
+	Verb string
+	Func echo.HandlerFunc
+}
+
+// Service aims to help autodiscover our available services
 type Service interface {
-	// GetHandlers returns a map of GET endpoint strings followed by the representative handler function via the echo HandlerFunc interface
-	GetHandlers() map[string]echo.HandlerFunc
+	// GetHandlers returns a map of key/value pairs where the key is the HTTP route and the value is a Handler struct (an Echo handler function along with its HTTP verb)
+	GetHandlers() map[string]Handler
 }

@@ -13,8 +13,7 @@ func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
 			Value: svc.Subscriptions,
 		}
 
-		c.JSON(http.StatusOK, response)
-		return nil
+		return c.JSON(http.StatusOK, response)
 	}
 }
 

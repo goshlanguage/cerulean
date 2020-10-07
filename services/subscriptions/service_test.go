@@ -16,9 +16,7 @@ func TestAddSubscription(t *testing.T) {
 	err := svc.AddSubscription(newSub)
 	assert.NoError(t, err, "Adding subscription through service helper failed: %s", err)
 
-	dbSubs, err := s.Get("subscriptions")
-	assert.NoError(t, err, "Tried to get subscriptions from lightdb but received error: %s", err)
-
+	dbSubs := s.Get("subscriptions")
 	assert.NotEmpty(t, dbSubs, "Expected a non empty response from lightdb.")
 	assert.Contains(t, dbSubs, newSub.ID, "Expected to find newSub's ID in lightdb")
 }

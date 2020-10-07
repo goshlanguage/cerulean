@@ -10,15 +10,12 @@ import (
 // GetSubscriptionsHandler is the GET method handler for /subscriptions
 func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		subsString, err := svc.Store.Get("subscriptions")
-		if err != nil {
-			panic(err)
-		}
+		subsString := svc.Store.Get("subscriptions")
 
 		// If something is stored in the db
 		if subsString != "" {
 			subs := []Subscription{}
-			err = json.Unmarshal([]byte(subsString), &subs)
+			err := json.Unmarshal([]byte(subsString), &subs)
 			if err != nil {
 				panic(err)
 			}

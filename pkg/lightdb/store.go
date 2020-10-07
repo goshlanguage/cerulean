@@ -22,7 +22,6 @@ func (s *Store) Get(key string) string {
 	if val, ok := s.Data[key]; ok {
 		return val
 	}
-	// return "", fmt.Errorf("Key does not exist")
 	return ""
 }
 

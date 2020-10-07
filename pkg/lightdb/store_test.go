@@ -12,8 +12,7 @@ func TestStore(t *testing.T) {
 	s := NewStore()
 	s.Put("/subscriptions/", "{'a': 'b'}")
 
-	v, err := s.Get("/subscriptions/")
-	assert.NoError(t, err, "Didn't expect error when getting previously stored key, got: %s", err)
+	v := s.Get("/subscriptions/")
 	assert.Equal(
 		t,
 		expected,
@@ -23,17 +22,10 @@ func TestStore(t *testing.T) {
 		v,
 	)
 
-	err = s.Delete("/subscriptions/")
-	assert.NoError(
-		t,
-		err,
-		"Expected no errors from Delete. Error: %s",
-		err,
-	)
+	s.Delete("/subscriptions/")
 
-	v, err = s.Get("/subscriptions/")
+	v = s.Get("/subscriptions/")
 	assert.Equal(t, v, "")
-	assert.NoError(t, err, "Didn't expect error from getting empty key")
 }
 
 // TestGet shows a range of keys can be used
@@ -52,12 +44,7 @@ func TestGet(t *testing.T) {
 	}
 	for _, tt := range gettests {
 		t.Run(tt.key, func(t *testing.T) {
-			val, err := s.Get(tt.key)
-			if err != nil {
-				assert.Error(t, err, "Expected error: %s but got: %s", err, tt.err)
-			} else {
-				assert.NoError(t, err, "Didn't expect error from fetching key: %s", tt.key)
-			}
+			val := s.Get(tt.key)
 			assert.Equal(t, val, tt.expected, "Got unexpected value for key: %s, expected: %s, got: %s", tt.key, tt.expected, val)
 		})
 	}

@@ -3,7 +3,7 @@ package resourcegroups
 import (
 	"net/http"
 
-	"github.com/goshlanguage/cerulean/services"
+	"github.com/goshlanguage/cerulean/internal/services"
 )
 
 // Service satisfies the Service interface, and is used to start and maintain the ResourceGroup Service

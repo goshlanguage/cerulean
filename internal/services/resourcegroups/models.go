@@ -16,8 +16,8 @@ var sampleJSON = `
 }
 `
 
-// Response models the response from the Azure API when creating or updating a resourceGroup
-type Response struct {
+// ResourceGroup represents a resource group and also models the response from the Azure API when creating or updating a resource group
+type ResourceGroup struct {
 	ID         string `json:"id"`
 	Name       string `json:"name"`
 	Location   string `json:"location"`
@@ -27,8 +27,8 @@ type Response struct {
 }
 
 // NewResourceGroupsResponse takes a string ID and returns a basic ResourceGroupsResponse object
-func NewResourceGroupsResponse(subscriptionID string, resourceGroupName string) Response {
-	var response Response
+func NewResourceGroupsResponse(subscriptionID string, resourceGroupName string) ResourceGroup {
+	var response ResourceGroup
 	json.Unmarshal([]byte(sampleJSON), &response)
 
 	response.ID = fmt.Sprintf("/subscriptions/%s/resourceGroups/%s", subscriptionID, resourceGroupName)

@@ -11,15 +11,15 @@ import (
 
 const serviceKey = "subscriptions"
 
-// SubscriptionService satisfies the Service interface, and is used to start and maintain the Subscription Service
-type SubscriptionService struct {
+// Service satisfies the Service interface, and is used to start and maintain the Subscription Service
+type Service struct {
 	Store *lightdb.Store
 }
 
-// NewSubscriptionService is a factory for the SubscriptionService, which satisfies the services.Service interface and provides a default sub
+// NewService is a factory for the SubscriptionService, which satisfies the services.Service interface and provides a default sub
 // TODO Error handling
-func NewSubscriptionService(s *lightdb.Store) *SubscriptionService {
-	service := &SubscriptionService{
+func NewService(s *lightdb.Store) *Service {
+	service := &Service{
 		Store: s,
 	}
 	initSub := NewSubscription()
@@ -29,17 +29,17 @@ func NewSubscriptionService(s *lightdb.Store) *SubscriptionService {
 }
 
 // GetHandlers returns a map of all HTTP Echo handlers that the service needs in order to operate
-func (svc *SubscriptionService) GetHandlers() map[string]services.Handler {
+func (svc *Service) GetHandlers() map[string]services.Handler {
 	svcMap := make(map[string]services.Handler)
 	svcMap["/subscriptions"] = services.Handler{
 		Verb: http.MethodGet,
-		Func: svc.GetSubscriptionsHandler(),
+		Func: svc.GetHandler(),
 	}
 	return svcMap
 }
 
 // GetBaseSubscriptionID is a SubscriptionService specific helper that returns the initial subscriptionID
-func (svc *SubscriptionService) GetBaseSubscriptionID() string {
+func (svc *Service) GetBaseSubscriptionID() string {
 	subsString := svc.Store.Get(serviceKey)
 
 	var subs []Subscription
@@ -52,7 +52,7 @@ func (svc *SubscriptionService) GetBaseSubscriptionID() string {
 }
 
 // GetSubscriptions returns the Stores state
-func (svc *SubscriptionService) GetSubscriptions() ([]Subscription, error) {
+func (svc *Service) GetSubscriptions() ([]Subscription, error) {
 	var subs []Subscription
 	subsString := svc.Store.Get(serviceKey)
 
@@ -65,7 +65,7 @@ func (svc *SubscriptionService) GetSubscriptions() ([]Subscription, error) {
 }
 
 // AddSubscription takes a subscription and adds it to the store
-func (svc *SubscriptionService) AddSubscription(s Subscription) error {
+func (svc *Service) AddSubscription(s Subscription) error {
 	subsString := svc.Store.Get(serviceKey)
 
 	// if there are existing subs, be sure to deserialize the response and append

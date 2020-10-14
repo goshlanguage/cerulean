@@ -32,7 +32,7 @@ func New() Cerulean {
 	s := lightdb.NewStore()
 	e.HideBanner = true // Make log output less noisy by removing ASCII artwork
 
-	subscriptionsSVC := subscriptions.NewSubscriptionService(s)
+	subscriptionsSVC := subscriptions.NewService(s)
 	baseSub := subscriptionsSVC.GetBaseSubscriptionID()
 
 	svcs := []services.Service{

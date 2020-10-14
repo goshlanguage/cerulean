@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/goshlanguage/cerulean/internal/services"
+	"github.com/goshlanguage/cerulean/internal/services/resourcegroups"
 	"github.com/goshlanguage/cerulean/internal/services/subscriptions"
 	"github.com/goshlanguage/cerulean/pkg/lightdb"
 	"github.com/labstack/echo/v4"
@@ -37,6 +38,7 @@ func New() Cerulean {
 
 	svcs := []services.Service{
 		subscriptionsSVC,
+		resourcegroups.NewService(),
 	}
 
 	for _, service := range svcs {

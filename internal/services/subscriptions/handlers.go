@@ -7,8 +7,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// GetSubscriptionsHandler is the GET method handler for /subscriptions
-func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
+// GetHandler is the GET method handler for /subscriptions
+func (svc *Service) GetHandler() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		subsString := svc.Store.Get("subscriptions")
 
@@ -20,7 +20,7 @@ func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
 				panic(err)
 			}
 
-			response := SubscriptionResponse{
+			response := Response{
 				Value: subs,
 			}
 
@@ -30,13 +30,13 @@ func (svc *SubscriptionService) GetSubscriptionsHandler() echo.HandlerFunc {
 	}
 }
 
-// PostSubscriptionsHandler is the POST method handler for /subscriptions
+// PostHandler is the POST method handler for /subscriptions
 // POST https://management.azure.com/providers/Microsoft.Billing/billingAccounts/{billingAccountName}/billingProfiles/{billingProfileName}/invoiceSections/{invoiceSectionName}/providers/Microsoft.Subscription/createSubscription?api-version=2018-11-01-preview
 // 202 Accepted
 // Response: {
 // 	"subscriptionLink": "/subscriptions/d0d6ee57-6530-4fca-93a6-b755a070be35"
 // }
-func PostSubscriptionsHandler(pattern string, subs *[]Subscription) echo.HandlerFunc {
+func PostHandler(pattern string, subs *[]Subscription) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		return nil
 	}

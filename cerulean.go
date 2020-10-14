@@ -5,9 +5,9 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/goshlanguage/cerulean/internal/services"
+	"github.com/goshlanguage/cerulean/internal/services/subscriptions"
 	"github.com/goshlanguage/cerulean/pkg/lightdb"
-	"github.com/goshlanguage/cerulean/services"
-	"github.com/goshlanguage/cerulean/services/subscriptions"
 	"github.com/labstack/echo/v4"
 )
 

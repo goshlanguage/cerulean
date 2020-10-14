@@ -5,8 +5,8 @@ import (
 
 	"net/http"
 
+	"github.com/goshlanguage/cerulean/internal/services"
 	"github.com/goshlanguage/cerulean/pkg/lightdb"
-	"github.com/goshlanguage/cerulean/services"
 )
 
 const serviceKey = "subscriptions"

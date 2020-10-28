@@ -41,7 +41,7 @@ func New() Cerulean {
 	}
 
 	for _, service := range svcs {
-		service.GetAllHandlers(e)
+		service.GetServiceHandlers(e)
 	}
 
 	server := Cerulean{

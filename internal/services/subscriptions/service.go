@@ -26,8 +26,8 @@ func NewService(s *lightdb.Store) *Service {
 	return service
 }
 
-// GetAllHandlers returns a map of all HTTP Echo handlers that the service needs in order to operate
-func (svc *Service) GetAllHandlers(e *echo.Echo) []*echo.Route {
+// GetServiceHandlers returns a map of all HTTP Echo handlers that the service needs in order to operate
+func (svc *Service) GetServiceHandlers(e *echo.Echo) []*echo.Route {
 	return []*echo.Route{
 		e.GET("/subscriptions", svc.GetHandler()),
 	}

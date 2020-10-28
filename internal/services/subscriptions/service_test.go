@@ -10,7 +10,7 @@ import (
 // TestAddAndGetSubscription creates a store and tests out the AddSubscription(s Subscription) helper to ensure it functions as expected
 func TestAddSubscription(t *testing.T) {
 	s := lightdb.NewStore()
-	svc := NewSubscriptionService(s)
+	svc := NewService(s)
 
 	newSub := NewSubscription()
 	err := svc.AddSubscription(newSub)
@@ -23,7 +23,7 @@ func TestAddSubscription(t *testing.T) {
 
 func TestGetSubscriptions(t *testing.T) {
 	s := lightdb.NewStore()
-	svc := NewSubscriptionService(s)
+	svc := NewService(s)
 
 	subs, err := svc.GetSubscriptions()
 	assert.NoError(t, err, "Tried to get subscriptions from service helper but received error: %s", err)

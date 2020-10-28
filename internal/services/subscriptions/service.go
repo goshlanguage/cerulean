@@ -3,10 +3,8 @@ package subscriptions
 import (
 	"encoding/json"
 
-	"net/http"
-
-	"github.com/goshlanguage/cerulean/internal/services"
 	"github.com/goshlanguage/cerulean/pkg/lightdb"
+	"github.com/labstack/echo/v4"
 )
 
 const serviceKey = "subscriptions"
@@ -28,14 +26,11 @@ func NewService(s *lightdb.Store) *Service {
 	return service
 }
 
-// GetHandlers returns a map of all HTTP Echo handlers that the service needs in order to operate
-func (svc *Service) GetHandlers() map[string]services.Handler {
-	svcMap := make(map[string]services.Handler)
-	svcMap["/subscriptions"] = services.Handler{
-		Verb: http.MethodGet,
-		Func: svc.GetHandler(),
+// GetAllHandlers returns a map of all HTTP Echo handlers that the service needs in order to operate
+func (svc *Service) GetAllHandlers(e *echo.Echo) []*echo.Route {
+	return []*echo.Route{
+		e.GET("/subscriptions", svc.GetHandler()),
 	}
-	return svcMap
 }
 
 // GetBaseSubscriptionID is a SubscriptionService specific helper that returns the initial subscriptionID

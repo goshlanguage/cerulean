@@ -1,10 +1,8 @@
 package resourcegroups
 
 import (
-	"net/http"
-
-	"github.com/goshlanguage/cerulean/internal/services"
 	"github.com/goshlanguage/cerulean/pkg/lightdb"
+	"github.com/labstack/echo/v4"
 )
 
 const serviceKey = "resourcegroups"
@@ -15,7 +13,7 @@ type Service struct {
 }
 
 // NewService is a factory for Service, which satisfies the services.Service interface
-func NewService(s *lightdb.Store) services.Service {
+func NewService(s *lightdb.Store) *Service {
 	service := &Service{
 		Store: s,
 	}
@@ -23,16 +21,10 @@ func NewService(s *lightdb.Store) services.Service {
 	return service
 }
 
-// GetHandlers returns the HTTP Echo handlers that the service needs in order to operate
-func (svc *Service) GetHandlers() map[string]services.Handler {
-	svcMap := make(map[string]services.Handler)
-	svcMap["/subscriptions/:subscriptionId/resourcegroups/:resourceGroupName"] = services.Handler{
-		Verb: http.MethodGet,
-		Func: svc.GetHandler(),
+// GetAllHandlers returns the HTTP Echo handlers that the service needs in order to operate
+func (svc *Service) GetAllHandlers(e *echo.Echo) []*echo.Route {
+	return []*echo.Route{
+		e.GET("/subscriptions/:subscriptionId/resourcegroups/:resourceGroupName", svc.GetHandler()),
+		e.PUT("/subscriptions/:subscriptionId/resourcegroups/:resourceGroupName", svc.PutHandler()),
 	}
-	svcMap["/subscriptions/:subscriptionId/resourcegroups/:resourceGroupName"] = services.Handler{
-		Verb: http.MethodPut,
-		Func: svc.PutHandler(),
-	}
-	return svcMap
 }

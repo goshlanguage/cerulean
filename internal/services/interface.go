@@ -13,6 +13,6 @@ type Handler struct {
 
 // Service aims to help autodiscover our available services
 type Service interface {
-	// GetHandlers returns a map of key/value pairs where the key is the HTTP route and the value is a Handler struct (an Echo handler function along with its HTTP verb)
-	GetHandlers() map[string]Handler
+	// GetAllHandlers returns a map of key/value pairs where the key is the HTTP route and the value is a Handler struct (an Echo handler function along with its HTTP verb)
+	GetAllHandlers(e *echo.Echo) []*echo.Route
 }

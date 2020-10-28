@@ -46,7 +46,7 @@ func (svc *Service) GetBaseSubscriptionID() string {
 	return subs[0].SubscriptionID
 }
 
-// GetSubscriptions returns the Stores state
+// GetSubscriptions returns the Store's state
 func (svc *Service) GetSubscriptions() ([]Subscription, error) {
 	var subs []Subscription
 	subsString := svc.Store.Get(serviceKey)
@@ -59,7 +59,7 @@ func (svc *Service) GetSubscriptions() ([]Subscription, error) {
 	return subs, nil
 }
 
-// AddSubscription takes a subscription and adds it to the store
+// AddSubscription takes a subscription and adds it to the Store
 func (svc *Service) AddSubscription(s Subscription) error {
 	subsString := svc.Store.Get(serviceKey)
 

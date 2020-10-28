@@ -1,6 +1,8 @@
 package resourcegroups
 
 import (
+	"encoding/json"
+
 	"github.com/goshlanguage/cerulean/pkg/lightdb"
 	"github.com/labstack/echo/v4"
 )
@@ -27,4 +29,30 @@ func (svc *Service) GetAllHandlers(e *echo.Echo) []*echo.Route {
 		e.GET("/subscriptions/:subscriptionId/resourcegroups/:resourceGroupName", svc.GetHandler()),
 		e.PUT("/subscriptions/:subscriptionId/resourcegroups/:resourceGroupName", svc.PutHandler()),
 	}
+}
+
+// GetResourceGroup returns a resource group for a specific subscription found in the Store
+func (svc *Service) GetResourceGroup(subscriptionID string, resourceGroupName string) (ResourceGroup, error) {
+	var resourceGroup ResourceGroup
+	resourceGroupString := svc.Store.Get(serviceKey + "/" + subscriptionID + "/" + resourceGroupName)
+
+	err := json.Unmarshal([]byte(resourceGroupString), &resourceGroup)
+	if err != nil {
+		return ResourceGroup{}, err
+	}
+
+	return resourceGroup, nil
+}
+
+// AddResourceGroup takes a resource group and adds it to the Store
+func (svc *Service) AddResourceGroup(subscriptionID string, resourceGroupName string) error {
+	resourceGroupsBytes, err := json.Marshal(NewResourceGroupsResponse(subscriptionID, resourceGroupName))
+	if err != nil {
+		return err
+	}
+	resourceGroupString := string(resourceGroupsBytes)
+
+	svc.Store.Put(serviceKey+"/"+subscriptionID+"/"+resourceGroupName, resourceGroupString)
+
+	return nil
 }

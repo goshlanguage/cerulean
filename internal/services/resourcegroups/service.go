@@ -2,6 +2,7 @@ package resourcegroups
 
 import (
 	"encoding/json"
+	"errors"
 
 	"github.com/goshlanguage/cerulean/pkg/lightdb"
 	"github.com/labstack/echo/v4"
@@ -26,8 +27,8 @@ func NewService(s *lightdb.Store) *Service {
 // GetServiceHandlers returns the HTTP Echo handlers that the service needs in order to operate
 func (svc *Service) GetServiceHandlers(e *echo.Echo) []*echo.Route {
 	return []*echo.Route{
-		e.GET("/subscriptions/:subscriptionId/resourcegroups/:resourceGroupName", svc.GetHandler()),
-		e.PUT("/subscriptions/:subscriptionId/resourcegroups/:resourceGroupName", svc.PutHandler()),
+		e.GET("/subscriptions/:subscriptionID/resourcegroups/:resourceGroupName", svc.GetHandler()),
+		e.PUT("/subscriptions/:subscriptionID/resourcegroups/:resourceGroupName", svc.PutHandler()),
 	}
 }
 
@@ -46,6 +47,14 @@ func (svc *Service) GetResourceGroup(subscriptionID string, resourceGroupName st
 
 // AddResourceGroup takes a resource group and adds it to the Store
 func (svc *Service) AddResourceGroup(subscriptionID string, resourceGroupName string) error {
+	if len(subscriptionID) == 0 {
+		return errors.New("subscriptionID URI param cannot be empty")
+	}
+
+	if len(resourceGroupName) == 0 {
+		return errors.New("resourceGroupName URI param cannot be empty")
+	}
+
 	resourceGroupsBytes, err := json.Marshal(NewResourceGroupsResponse(subscriptionID, resourceGroupName))
 	if err != nil {
 		return err

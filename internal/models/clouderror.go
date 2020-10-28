@@ -1,5 +1,7 @@
 package models
 
+import "strconv"
+
 // CloudError represents the structure for how the Azure SDK formats error responses
 // TODO: Is this used in other services/should it be in a more generalized folder location
 // TODO: Finish implementing the Info and Details attributes (not needed for MVP)
@@ -20,7 +22,7 @@ type CloudError struct {
 func NewCloudError(httpErrorCode int, err error) CloudError {
 	var errorResponse CloudError
 
-	errorResponse.Error.Code = string(httpErrorCode)
+	errorResponse.Error.Code = strconv.Itoa(httpErrorCode)
 	errorResponse.Error.Message = err.Error()
 
 	return errorResponse

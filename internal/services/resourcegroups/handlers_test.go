@@ -16,7 +16,7 @@ func TestResourceGroupPutAndGet(t *testing.T) {
 	resourceGroupName := "testResourceGroupName"
 
 	e := echo.New()
-	req := httptest.NewRequest(http.MethodPost, "/subscriptions/"+subscriptionID+"/resourcegroups/"+resourceGroupName, nil)
+	req := httptest.NewRequest(http.MethodPut, "/subscriptions/"+subscriptionID+"/resourcegroups/"+resourceGroupName, nil)
 	rec := httptest.NewRecorder()
 	ctx := e.NewContext(req, rec)
 

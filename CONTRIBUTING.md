@@ -15,6 +15,15 @@ Thank you for your contribution(s)!
 1. Fork the desired repo, develop and test your code changes.
 1. Submit a pull request.
 
+## Adding a new API endpoint
+
+When adding a new API endpoint, please be sure to include the following:
+
+- [README.md](internal/subscriptions/README.md) - A summation of the api endpoint(s) we're emulating with links to the documentation
+- tests - testing is highly valued in this project. Please test at the service level, but also add to the integration test for Cerulean in `tests/`
+- Detail in your PR which API versions you're including
+
+
 ## Meetings
 
 We meet every 2 weeks to discuss road map or discuss open issues. Please join us at:

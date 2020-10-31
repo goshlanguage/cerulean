@@ -10,18 +10,18 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// TestGetSubscriptionsHandler sets up a server and tests the endpoint directly
-func TestGetSubscriptionsHandler(t *testing.T) {
+// TestGetHandler sets up a server and tests the endpoint directly
+func TestGetHandler(t *testing.T) {
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rec := httptest.NewRecorder()
 	ctx := e.NewContext(req, rec)
 
 	s := lightdb.NewStore()
-	subscriptionService := SubscriptionService{
+	subscriptionService := Service{
 		Store: s,
 	}
-	getHandler := subscriptionService.GetSubscriptionsHandler()
+	getHandler := subscriptionService.GetHandler()
 
 	// Assert that there were no errors and our subscriptions service returned a blank response because no subscriptions exist
 	if assert.NoError(t, getHandler(ctx)) {

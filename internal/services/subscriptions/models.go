@@ -7,7 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
-var subscriptionsJSON = `
+var sampleJSON = `
 {
   "value": [
     {
@@ -32,25 +32,13 @@ var subscriptionsJSON = `
 }
 `
 
-// SubscriptionResponse models the subscription response from the API
-type SubscriptionResponse struct {
+// Response models the subscription response from the API
+type Response struct {
 	Value []Subscription `json:"value"`
 	Count struct {
 		Type  string `json:"type"`
 		Value int    `json:"value"`
 	} `json:"count"`
-}
-
-// NewSubscriptionResponseStub takes a string ID and returns a basic SubscriptionResponse object
-// TODO: Support passing multiple subscription IDs
-func NewSubscriptionResponseStub(subscriptionID string) SubscriptionResponse {
-	var response SubscriptionResponse
-	json.Unmarshal([]byte(subscriptionsJSON), &response)
-
-	response.Value[0].ID = fmt.Sprintf("/subscriptions/%s", subscriptionID)
-	response.Value[0].SubscriptionID = fmt.Sprintf("%s", subscriptionID)
-
-	return response
 }
 
 // Subscription is the object we store in our Inventory grab bag to model a subscription
@@ -69,6 +57,18 @@ type Subscription struct {
 	} `json:"subscriptionPolicies"`
 }
 
+// NewResponseStub takes a string ID and returns a basic SubscriptionResponse object
+// TODO: Support passing multiple subscription IDs
+func NewResponseStub(subscriptionID string) Response {
+	var response Response
+	json.Unmarshal([]byte(sampleJSON), &response)
+
+	response.Value[0].ID = fmt.Sprintf("/subscriptions/%s", subscriptionID)
+	response.Value[0].SubscriptionID = fmt.Sprintf("%s", subscriptionID)
+
+	return response
+}
+
 // NewSubscription takes a string ID and returns a basic Subscription object
 // It does this by indirectly using the NewSubscriptionResponse factory for the sake of loading in a JSON stub,
 //   and replacing the SubscriptionID in said stub to constructr our Subscription.
@@ -80,5 +80,5 @@ func NewSubscription() Subscription {
 		panic(err)
 	}
 
-	return NewSubscriptionResponseStub(id.String()).Value[0]
+	return NewResponseStub(id.String()).Value[0]
 }

@@ -5,9 +5,9 @@ import (
 	"net"
 	"net/http"
 
+	"github.com/goshlanguage/cerulean/internal/services"
+	"github.com/goshlanguage/cerulean/internal/services/subscriptions"
 	"github.com/goshlanguage/cerulean/pkg/lightdb"
-	"github.com/goshlanguage/cerulean/services"
-	"github.com/goshlanguage/cerulean/services/subscriptions"
 	"github.com/labstack/echo/v4"
 )
 
@@ -32,7 +32,7 @@ func New() Cerulean {
 	s := lightdb.NewStore()
 	e.HideBanner = true // Make log output less noisy by removing ASCII artwork
 
-	subscriptionsSVC := subscriptions.NewSubscriptionService(s)
+	subscriptionsSVC := subscriptions.NewService(s)
 	baseSub := subscriptionsSVC.GetBaseSubscriptionID()
 
 	svcs := []services.Service{

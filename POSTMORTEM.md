@@ -30,3 +30,5 @@ We originally started Cerulean as an "artisanally crafted" project where we did 
 ## Final Thoughts
 
 It is still likely possible to use the AutoRest code generator to create mocks and scaffolding, but there was enough overhead involved that it felt unwieldy and not worth the effort at the time.
+
+We could have potentially gained more up-front traction had we gone with our initial plans of pulling in a customer or two early on to keep the quality of the project (e.g. documentation, etc.) as well as getting feedback on where we could offer the most benefit with the least effort.

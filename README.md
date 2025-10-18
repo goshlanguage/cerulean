@@ -7,6 +7,8 @@
 
 [![WIP](https://img.shields.io/badge/alpha-unstable-yellow)]() [![Go Report Card](https://goreportcard.com/badge/github.com/goshlanguage/cerulean)](https://goreportcard.com/report/github.com/goshlanguage/cerulean) [![Man Hours](https://img.shields.io/endpoint?url=https%3A%2F%2Fmh.jessemillar.com%2Fhours%3Frepo%3Dhttps%3A%2F%2Fgithub.com%2Fgoshlanguage%2Fcerulean.git)](https://jessemillar.com/r/man-hours)
 
+> This project is [currently unmaintained](POSTMORTEM.md).
+
 Cerulean is a mock Azure API, designed for writing infrastructure tests so you can run tests without spending that `dosh`. This is great for folks who are using the `azure-sdk-for-go` especially. Here's a nifty example:
 
 ```go
